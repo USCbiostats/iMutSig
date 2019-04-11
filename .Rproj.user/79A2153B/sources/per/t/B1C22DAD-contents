@@ -1,0 +1,210 @@
+library(shiny)
+library(dplyr)
+library(rvest)
+source('functions/sortSignature.R')
+source("Background.R")
+
+
+
+library(shinydashboard)
+
+ui <- dashboardPage(
+  dashboardHeader(title = "Mutational Signatures Conversion"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem("Independent to COSMIC", tabName = "ind", icon = icon("angle-double-right")),
+      menuItem("COSMIC to Independent", tabName = "full", icon = icon("angle-double-right"))
+    )
+  ),
+  dashboardBody(
+    tabItems(
+      # First tab content
+      tabItem(tabName = "ind",
+              fluidRow(
+                
+                column(width= 4, 
+                  
+                  box(
+                    title = "Independent Signature Input", width = NULL,
+                    selectInput("N_D", "Choose a signature:",
+                                choices = paste0("D",1:27))
+                    ),
+                    
+                  box(plotOutput("selected_sig_1", height = 200), width = NULL)
+                    
+                ),    
+                  
+                  
+                column(width= 8,
+                  
+                  
+                  box(plotOutput("corrplot1_1", width = 600, height = 115), width = NULL),
+                  
+                  box(plotOutput("corrplot1_2", width = 600, height = 200), width = NULL)
+                  
+                  
+                )
+              ),
+                
+            
+              
+              
+              fluidRow(
+                box(
+                  width = 8, 
+                  plotOutput("selected_sig_full_1", height = 200)
+                ),
+                
+                box(
+                  width = 4, 
+                  uiOutput("selected_sig_text_1_1")
+                ),
+                
+                box(
+                  width = 8, 
+                  plotOutput("selected_sig_full_max_1", height = 200)
+                ),
+                
+                box(
+                  width = 4, 
+                  uiOutput("selected_sig_text_1_2")
+                )
+                
+              )
+                
+      ),
+      
+      # Second tab content
+      tabItem(tabName = "full",
+              fluidRow(
+                
+              
+              column(width= 4,   
+                     
+                box(
+                    title = "COSMIC Signature Input", width = NULL,
+                    selectInput("N_F", "Choose a signature:",
+                                choices = paste0("F",1:30))
+                  )
+
+                ),    
+              
+              column(width = 8,
+                     
+                box(plotOutput("corrplot2_2", width = 600, height = 200), width = NULL)
+                
+                )
+              
+              
+              ),
+              
+              
+              fluidRow(
+                box(
+                  width = 8, 
+                  plotOutput("selected_sig_full_2", height = 200)
+                ),
+                
+                box(
+                  width = 4, 
+                  uiOutput("selected_sig_text_2_1")
+                )
+                
+                
+              )
+              
+      )
+      
+      )
+      
+    )
+)
+
+
+server <- function(input, output) {
+
+  ########
+  # Page 1  
+  ########
+  
+  index <- reactive({
+    as.numeric(gsub("[^0-9.]", "", input$N_D))
+  })
+
+  output$corrplot1_1 <- renderPlot({
+    corrplot(corr_mat[index(),,drop=FALSE], is.corr=FALSE, bg="#F8F8FF",
+             col=myCol(200), tl.col="black",
+             tl.cex=1.0, tl.srt=90, cl.pos="n")
+    
+  })
+  
+  output$corrplot1_2 <- renderPlot({
+    corrplot(pm_corr[index(),,drop=FALSE], is.corr=FALSE, bg="#F8F8FF",
+             col=myCol(200), tl.col="black",
+             tl.cex=1.0, tl.srt=90, cl.pos="n")
+  })
+
+  
+  output$selected_sig_1 <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[index()]], 5, isScale = TRUE)
+  })
+
+  # Page 1: correlated signature
+  
+  output$selected_sig_full_1 <- renderPlot({
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index()]], c(6,4,4)), 3, FALSE)
+  })
+  
+  
+  output$selected_sig_full_max_1 <- renderPlot({
+    index.max <- as.numeric(gsub("[^0-9.]", "", names(sort(corr_mat[index(),], decreasing = TRUE)[1:1])))   
+    visPMS_full_modified(sig_full[,index.max+3], 3, FALSE)
+  })
+  
+  output$selected_sig_text_1_1 <- renderText({
+    HTML(paste("Selected independent signature","<b>", index(), "<b>", "is found in", 
+               paste(names(which(pm_corr[index(),]==1)), collapse = ", ")))
+  })
+  
+  output$selected_sig_text_1_2 <- renderText({
+    index.max <- as.numeric(gsub("[^0-9.]", "", names(sort(corr_mat[index(),], decreasing = TRUE)[1:1])))   
+    HTML(paste("Similar COSIMIC signature","<b>", index.max,"<b>", "is found in", 
+               paste(names(which(pm_corr[index.max,]==1)), collapse = ", ")))
+    
+    #paste("Similar COSMIC signature", index.max, comment_full_mat[index.max,])
+  })
+  
+  ########
+  # Page 2
+  ########
+  
+  index2 <- reactive({
+    as.numeric(gsub("[^0-9.]", "", input$N_F))
+  })
+  
+  output$corrplot2_2 <- renderPlot({
+    corrplot(pm_corr[index2(),,drop=FALSE], is.corr=FALSE, bg="#F8F8FF",
+             col=myCol(200), tl.col="black", 
+             tl.cex=1.0, tl.srt=90, cl.pos="n")
+    
+  })
+  
+
+  # Page 2: correlated signature
+  
+  output$selected_sig_full_2 <- renderPlot({
+    visPMS_full_modified(sig_full[,index2()+3], 3, FALSE)
+  })
+  
+  
+  output$selected_sig_text_2_1 <- renderText({
+    HTML(paste("Selected COSMIC signature","<b>", index2(),"<b>", "is found in", 
+               paste(names(which(cosmic_corr[index2(),]==1)), collapse = ", ")))
+  })
+  
+
+  
+
+}
+
+shinyApp(ui, server)

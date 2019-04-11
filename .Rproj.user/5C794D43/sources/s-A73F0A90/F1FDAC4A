@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1554954806727.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "F1FDAC4A",
+    "lastKnownWriteTime" : 1554157493,
+    "last_content_update" : 1554157493,
+    "path" : "G:/My Drive/Project 4 - Tumor modeling/Github/P4-TumorModeling/Zhi_Scripts/iMutSig/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "cursorPosition" : "525,34",
+        "scrollLine" : "507",
+        "source_window_id" : "",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

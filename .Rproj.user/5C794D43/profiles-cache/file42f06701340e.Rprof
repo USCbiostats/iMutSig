@@ -1,0 +1,2 @@
+memory profiling: GC profiling: line profiling: sample.interval=10000
+:540297:919032:36171296:10:"names" "structure" "simpleMessage" "message" "value[[3]]" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 

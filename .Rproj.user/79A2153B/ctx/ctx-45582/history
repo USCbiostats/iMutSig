@@ -1,0 +1,14 @@
+shiny::runApp()
+install.packages("shinydashboard")
+runApp()
+install.packages(c("corrplot", "rvest"))
+rownames(cosmic_corr) <- c(paste("F", 1:30), "Other")
+runApp()
+?read_html
+?/read_html
+?/read_html
+??read_html
+runApp()
+?html_nodes
+?/html_nodes
+??html_nodes

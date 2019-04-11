@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1548203556624.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "730798641",
+    "id" : "B1C22DAD",
+    "lastKnownWriteTime" : 1548203354,
+    "last_content_update" : 1548203354,
+    "path" : "G:/My Drive/Project 4 - Tumor modeling/Github/P4-TumorModeling/Zhi_Scripts/Cosmic2pm/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "18,16",
+        "scrollLine" : "9",
+        "source_window_id" : ""
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
