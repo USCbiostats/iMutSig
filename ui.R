@@ -81,7 +81,7 @@ ui <- dashboardPage(
                 
                 fluidRow(
                   valueBox(width = 2, color = "black",
-                           "Choose", "a COSMIS signature"),
+                           "Choose", "a COSMIC signature"),
                   
                   box(width = 2, height = "100px",
                       selectInput(inputId = "N_F", label="COSMIC",
@@ -302,7 +302,7 @@ ui <- dashboardPage(
                   
                   column(width = 4, 
                     box(width = NULL, height = "280px",
-                        title = "COSMIS signature",
+                        title = "COSMIC signature",
                         status = "primary", solidHeader = TRUE,
                         style="font-size:130%",
                         dataTableOutput("fu_table")
