@@ -12,7 +12,7 @@ if ((Sys.Date() - as.Date(file.info("data/COSMIC_sig.rdata", extra_cols = TRUE)$
 
 if ((Sys.Date() - as.Date(file.info("data/COSMIC.rdata", extra_cols = TRUE)$mtime) )>30){
   
-  cosmic <- read_html("https://cancer.sanger.ac.uk/cosmic/signatures")
+  cosmic <- read_html("https://cancer.sanger.ac.uk/cosmic/signatures_v2")
   
   comment <- html_nodes(cosmic, "div") %>% html_nodes("span") %>% html_text() %>% gsub("[\r\n]", "", .)
   
