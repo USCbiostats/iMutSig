@@ -2,9 +2,9 @@ server <- function(input, output) {
   addClass(selector = "body", class = "sidebar-collapse")
   
   
-  output$menu <- renderMenu({
+  output$menu <- renderMenu({4
     sidebarMenu(
-      menuItem(paste("All data were most recently updated on:",as.Date(file.info("data/COSMIC.rdata")$mtime)), 
+      menuItem(paste("All data were most recently updated on:",as.Date(file.info("data/COSMIC_sig.rdata")$mtime)), 
                icon = icon("calendar"))
     )
   })
@@ -17,159 +17,283 @@ server <- function(input, output) {
     removeClass(selector = "body", class = "sidebar-open")
   })
   
-  ########
-  # Page 1
-  ########
-  index <- reactive({
-    as.numeric(stringr::str_extract(input$N_F,"\\d+"))
+  ###########
+  # Page 1-v2
+  ###########
+  index_v2 <- reactive({
+    as.numeric(stringr::str_extract(input$N_F_v2,"\\d+"))
   })
   
-  indexS <- reactive({
-    as.numeric(stringr::str_extract(input$N_S_D,"\\d+"))
+  indexS_v2 <- reactive({
+    as.numeric(stringr::str_extract(input$N_S_D_v2,"\\d+"))
   })
   
-  
-  output$mytable1 <- renderDataTable({
-    table <- cbind(
-      `COSMIC` = paste0("C", index()),
-      `pmsignature` = paste0("P", 1:dim(corr_mat)[1]),
-      `Similarity` = round(corr_mat[, index()], 3)
-    )
-    table <- table[order(table[, 3], decreasing = TRUE), ]
-    rownames(table) <- NULL
-    datatable(table, options = list(
-      pageLength = 3, searching = FALSE,
-      pagingType = "simple", lengthChange = FALSE
-    )) %>%
-      formatStyle(columns = 1:3, "text-align" = "center")
+  output$selected_sig_1_v2 <- renderPlot({
+    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3, FALSE)
   })
   
-  
-  #Selected signature
-  
-  output$corrplot1_1 <- renderPlot({
-    corrplot(t(corr_mat)[index(), , drop = FALSE],
-             is.corr = FALSE,
-             tl.col = "black", method = "shade", col = col(200),
-             p.mat = t(corr_mat)[index(), , drop = FALSE] %>% round(1),
-             insig = "p-value", tl.srt = 0, tl.offset = 1,
-             tl.cex = 1.2, cl.pos = "n"
-    )
-  })
-  
-  output$corrplot1_2 <- renderPlot({
-    corrplot(cosmic_corr[index(), , drop = FALSE],
+  output$corrplot1_2_v2 <- renderPlot({
+    corrplot(cosmic_corr_v2[index_v2(), , drop = FALSE],
              is.corr = FALSE, bg = "#F8F8FF",
              col = myCol(200), tl.col = "black",
              tl.cex = 0.9, cl.pos = "n", cl.lim = c(0, 1)
     )
   })
   
-  #Selected signature
+  output$mytable1_v2 <- renderDataTable({
+    table <- cbind(
+      `COSMIC v2` = paste0("C", index_v2()),
+      `pmsignature` = paste0("P", 1:dim(corr_mat_v2)[1]),
+      `Similarity` = round(corr_mat_v2[, index_v2()], 3)
+    )
+    table <- table[order(table[, 3], decreasing = TRUE), ]
+    rownames(table) <- NULL
+    datatable(table, options = list(
+      pageLength = 3, searching = FALSE,
+      pagingType = "simple", lengthChange = FALSE
+    )) %>%
+      formatStyle(columns = 1:3, "text-align" = "center")
+  }) 
   
-  output$selected_sig_1 <- renderPlot({
-    visPMS_full_modified(sig_full[, index() + 3], 3, FALSE)
+  output$corrplot1_1_v2 <- renderPlot({
+    corrplot(t(corr_mat_v2)[index_v2(), , drop = FALSE],
+             is.corr = FALSE,
+             tl.col = "black", method = "shade", col = col(200),
+             p.mat = t(corr_mat_v2)[index_v2(), , drop = FALSE] %>% round(1),
+             insig = "p-value", tl.srt = 0, tl.offset = 1,
+             tl.cex = 1.2, cl.pos = "n"
+    )
   })
   
-  # Page 1: selected signature
-  output$selected_sig_full_1 <- renderPlot({
-    visPMS_full_modified(sig_full[, index() + 3], 3, FALSE)
-  })
-  
-  output$selected_sig_text_1 <- renderText({
-    HTML(paste0(
-      "<b>Type:</b> COSMIC signature C", index(), "</br>",
-      "<b>", "Cancer Membership:</b> ", paste(names(which(cosmic_corr[index(), ] == 1)), collapse = ", ")
-    ))
-  })
-  
-  # the most similar signature
-  output$selected_sig_full_1_1 <- renderPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat)[index(), ], decreasing = TRUE)[1:1])))
-    pmsignature:::visPMS_ind(Fs[[rank]], 5, isScale = TRUE)
-  })
-  
-  output$selected_sig_pm_full_1_1 <- renderPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat)[index(), ], decreasing = TRUE)[1:1])))
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3, FALSE)
-  })
-  
-  output$selected_sig_text_1_1 <- renderText({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat)[index(), ], decreasing = TRUE)[1:1])))
-    HTML(paste(
-      "<b>Type:</b> pmsignature ", paste0("P", rank), "</br>",
-      "<b>Similarity(highest):</b> ", t(corr_mat)[index(), rank] %>% round(3), "</br>", "</b>",
-      "<b>", "Cancer Membership:", "</b>",
-      paste(names(which(pm_corr[rank, ] == 1)), collapse = ", ")
-    ))
-  })
-  
-  # self-defined signature
-  output$selected1_1 <- renderValueBox({
+  output$selected1_v2_1 <- renderValueBox({
     valueBox(
-      paste0("C", index()), "COSMIC signature",
+      paste0("C", index_v2()), "COSMIC signature",
       icon = icon("list"),
       color = "blue"
     )
   })
   
-  output$highest <- renderValueBox({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat)[index(), ], decreasing = TRUE)[1:1])))
+  output$selected1_v2_2 <- renderValueBox({
+    valueBox(
+      paste0("P", indexS_v2()), "pmsignature input",
+      icon = icon("user"),
+      color = "yellow"
+    )
+  })
+  
+  output$selected_sig_text_1_v2 <- renderText({
+    HTML(paste0(
+      "<b>Type:</b> COSMIC signature C", index_v2(), "</br>",
+      "<b>", "Cancer Membership:</b> ", paste(names(which(cosmic_corr_v2[index_v2(), ] == 1)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_full_1_v2 <- renderPlot({
+    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3, FALSE)
+  })
+  
+  # the most similar signature
+  output$selected_sig_text_1_v2_1 <- renderText({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2)[index_v2(), ], decreasing = TRUE)[1:1])))
+    HTML(paste(
+      "<b>Type:</b> pmsignature ", paste0("P", rank), "</br>",
+      "<b>Similarity(highest):</b> ", t(corr_mat_v2)[index_v2(), rank] %>% round(3), "</br>", "</b>",
+      "<b>", "Cancer Membership:", "</b>",
+      paste(names(which(pm_corr[rank, ] == 1)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_pm_full_1_v2_1 <- renderPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2)[index_v2(), ], decreasing = TRUE)[1:1])))
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3, FALSE)
+  })
+  
+  output$selected_sig_full_1_v2_1 <- renderPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2)[index_v2(), ], decreasing = TRUE)[1:1])))
+    pmsignature:::visPMS_ind(Fs[[rank]], 5, isScale = TRUE)
+  })
+  
+  # self-defined signature
+  output$highest_v2 <- renderValueBox({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2)[index_v2(), ], decreasing = TRUE)[1:1])))
+    valueBox(
+      paste0("P", rank), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
+      color = "green"
+    )
+  })
+
+  output$selected_sig_text_1_v2_2 <- renderText({
+    HTML(paste(
+      "<b>Type:</b> pmsignature ", paste0("P", indexS_v2()), "</br>",
+      "<b>Similarity(selected):</b> ", t(corr_mat_v2)[index_v2(), indexS_v2()] %>% round(3), "</br>", "</b>",
+      "<b>", "Cancer Membership:", "</b>",
+      paste(names(which(pm_corr[indexS_v2(), ] == 1)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_pm_full_1_v2_2 <- renderPlot({
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v2()]], c(6, 4, 4)), 3, FALSE)
+  })
+  
+  output$selected_sig_full_1_v2_2 <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[indexS_v2()]], 5, isScale = TRUE)
+  })
+  
+  ###########
+  # Page 1-v3
+  ###########
+  index_v3 <- reactive({
+    as.character(input$N_F_v3)
+  })
+  
+  indexS_v3 <- reactive({
+    as.numeric(stringr::str_extract(input$N_S_D_v3,"\\d+"))
+  })
+  
+  output$selected_sig_1_v3 <- renderPlot({
+    visPMS_full_modified(sig_full_v3[, index_v3()], 3, FALSE)
+  })
+  
+  output$corrplot1_2_v3 <- renderPlot({
+    corrplot(cosmic_corr_v3[index_v3(), , drop = FALSE],
+             is.corr = FALSE, bg = "#F8F8FF",
+             col = myCol(200), tl.col = "black",
+             tl.cex = 0.8, cl.pos = "n", cl.lim = c(0, 1)
+    )
+  })
+  
+  output$mytable1_v3 <- renderDataTable({
+    table <- cbind(
+      `COSMIC v3` = index_v3(),
+      `pmsignature` = paste0("P", 1:dim(corr_mat_v3)[1]),
+      `Similarity` = round(corr_mat_v3[, index_v3()], 3)
+    )
+    table <- table[order(table[, 3], decreasing = TRUE), ]
+    rownames(table) <- NULL
+    datatable(table, options = list(
+      pageLength = 3, searching = FALSE,
+      pagingType = "simple", lengthChange = FALSE
+    )) %>%
+      formatStyle(columns = 1:3, "text-align" = "center")
+  }) 
+  
+  output$corrplot1_1_v3 <- renderPlot({
+    corrplot(t(corr_mat_v3)[index_v3(), , drop = FALSE],
+             is.corr = FALSE,
+             tl.col = "black", method = "shade", col = col(200),
+             p.mat = t(corr_mat_v3)[index_v3(), , drop = FALSE] %>% round(1),
+             insig = "p-value", tl.srt = 0, tl.offset = 1,
+             tl.cex = 1.2, cl.pos = "n"
+    )
+  })
+  
+  output$selected1_v3_1 <- renderValueBox({
+    valueBox(
+      paste0(index_v3()), "COSMIC signature",
+      icon = icon("list"),
+      color = "blue"
+    )
+  })
+  
+  output$selected1_v3_2 <- renderValueBox({
+    valueBox(
+      paste0("P", indexS_v3()), "pmsignature input",
+      icon = icon("user"),
+      color = "yellow"
+    )
+  })
+  
+  output$selected_sig_text_1_v3 <- renderText({
+    HTML(paste0(
+      "<b>Type:</b> COSMIC signature ", index_v3(), "</br>",
+      "<b>", "Cancer Membership:</b> ", paste(names(which(cosmic_corr_v3[index_v3(), ] > 0)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_full_1_v3 <- renderPlot({
+    visPMS_full_modified(sig_full_v3[, index_v3()], 3, FALSE)
+  })
+  
+  # the most similar signature
+  output$selected_sig_text_1_v3_1 <- renderText({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3)[index_v3(), ], decreasing = TRUE)[1:1])))
+    HTML(paste(
+      "<b>Type:</b> pmsignature ", paste0("P", rank), "</br>",
+      "<b>Similarity(highest):</b> ", t(corr_mat_v3)[index_v3(), rank] %>% round(3), "</br>", "</b>",
+      "<b>", "Cancer Membership:", "</b>",
+      paste(names(which(pm_corr[rank, ] == 1)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_pm_full_1_v3_1 <- renderPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3)[index_v3(), ], decreasing = TRUE)[1:1])))
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3, FALSE)
+  })
+  
+  output$selected_sig_full_1_v3_1 <- renderPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3)[index_v3(), ], decreasing = TRUE)[1:1])))
+    pmsignature:::visPMS_ind(Fs[[rank]], 5, isScale = TRUE)
+  })
+  
+  # self-defined signature
+  output$highest_v3 <- renderValueBox({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3)[index_v3(), ], decreasing = TRUE)[1:1])))
     valueBox(
       paste0("P", rank), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
       color = "green"
     )
   })
   
-  
-  output$selected1_2 <- renderValueBox({
-    valueBox(
-      paste0("P", indexS()), "pmsignature input",
-      icon = icon("user"),
-      color = "yellow"
-    )
-  })
-  
-  output$selected_sig_full_1_2 <- renderPlot({
-    pmsignature:::visPMS_ind(Fs[[indexS()]], 5, isScale = TRUE)
-  })
-  
-  output$selected_sig_pm_full_1_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS()]], c(6, 4, 4)), 3, FALSE)
-  })
-  
-  output$selected_sig_text_1_2 <- renderText({
+  output$selected_sig_text_1_v3_2 <- renderText({
     HTML(paste(
-      "<b>Type:</b> pmsignature ", paste0("P", indexS()), "</br>",
-      "<b>Similarity(selected):</b> ", t(corr_mat)[index(), indexS()] %>% round(3), "</br>", "</b>",
+      "<b>Type:</b> pmsignature ", paste0("P", indexS_v3()), "</br>",
+      "<b>Similarity(selected):</b> ", t(corr_mat_v3)[index_v3(), indexS_v3()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
-      paste(names(which(pm_corr[indexS(), ] == 1)), collapse = ", ")
+      paste(names(which(pm_corr[indexS_v3(), ] == 1)), collapse = ", ")
     ))
   })
   
-  
-  ########
-  # Page 2
-  ########
-
-  index2 <- reactive({
-    as.numeric(stringr::str_extract(input$N_D,"\\d+"))
+  output$selected_sig_pm_full_1_v3_2 <- renderPlot({
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v3()]], c(6, 4, 4)), 3, FALSE)
   })
   
-  indexS2 <- reactive({
-    as.numeric(stringr::str_extract(input$N_D_S,"\\d+"))
+  output$selected_sig_full_1_v3_2 <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[indexS_v3()]], 5, isScale = TRUE)
   })
   
-  rank1 <- reactive({
-    as.numeric(gsub("[^0-9.]", "", names(sort(corr_mat[index2(), ], decreasing = TRUE)[1:1])))
+  ###########
+  # Page 2-v2
+  ###########
+
+  index2_v2 <- reactive({
+    as.numeric(stringr::str_extract(input$N_D_v2,"\\d+"))
+  })
+  
+  indexS2_v2 <- reactive({
+    as.numeric(stringr::str_extract(input$N_D_S_v2,"\\d+"))
+  })
+  
+  rank1_v2 <- reactive({
+    as.numeric(gsub("[^0-9.]", "", names(sort(corr_mat_v2[index2_v2(), ], decreasing = TRUE)[1:1])))
+  })
+  
+  output$selected_sig_2_v2 <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[index2_v2()]], 5, isScale = TRUE)
   })
 
-
-  output$mytable2 <- renderDataTable({
+  output$corrplot2_v2_1 <- renderPlot({
+    corrplot(pm_corr[index2_v2(), , drop = FALSE],
+             is.corr = FALSE, bg = "#F8F8FF",
+             col = myCol(200), tl.col = "black",
+             tl.cex = 1.2, cl.pos = "n"
+    )
+  })
+  
+  output$mytable2_v2 <- renderDataTable({
     table <- cbind(
-      `pmsignature` = paste0("P", index2()),
-      `COSMIC Signature` = paste0("C", 1:dim(corr_mat)[2]),
-      `Similarity` = round(corr_mat[index2(), ], 3)
+      `pmsignature` = paste0("P", index2_v2()),
+      `COSMIC v2 Signature` = paste0("C", 1:dim(corr_mat_v2)[2]),
+      `Similarity` = round(corr_mat_v2[index2_v2(), ], 3)
     )
     rownames(table) <- NULL
     table <- table[order(table[, 3], decreasing = TRUE), ]
@@ -180,161 +304,256 @@ server <- function(input, output) {
       formatStyle(columns = 1:3, "text-align" = "center")
   })
 
+  output$corrplot2_v2_2 <- renderPlot({
+    corrplot(corr_mat_v2[index2_v2(), , drop = FALSE],
+             is.corr = FALSE,
+             tl.col = "black", method = "shade", col = col(200),
+             p.mat = corr_mat_v2[index2_v2(), , drop = FALSE] %>% round(1),
+             insig = "p-value", tl.srt = 0, tl.offset = 1,
+             tl.cex = 1.2, cl.pos = "n"
+    )
+  })
+  
   # Page 1: first two rows
   col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
 
-  output$corrplot2_1 <- renderPlot({
-    corrplot(pm_corr[index2(), , drop = FALSE],
-      is.corr = FALSE, bg = "#F8F8FF",
-      col = myCol(200), tl.col = "black",
-      tl.cex = 1.2, cl.pos = "n"
-    )
-  })
-
-  output$corrplot2_2 <- renderPlot({
-    corrplot(corr_mat[index2(), , drop = FALSE],
-      is.corr = FALSE,
-      tl.col = "black", method = "shade", col = col(200),
-      p.mat = corr_mat[index2(), , drop = FALSE] %>% round(1),
-      insig = "p-value", tl.srt = 0, tl.offset = 1,
-      tl.cex = 1.2, cl.pos = "n"
-    )
-  })
-
-
-
-  output$selected_sig_2 <- renderPlot({
-    pmsignature:::visPMS_ind(Fs[[index2()]], 5, isScale = TRUE)
-  })
-
-  output$selected_sig_2_1 <- renderPlot({
-    pmsignature:::visPMS_ind(Fs[[index2()]], 5, isScale = TRUE)
-  })
-  
-  # Page 1: selected signature
-
-  output$selected_sig_full_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index2()]], c(6, 4, 4)), 3, FALSE)
-  })
-
-  output$selected_sig_text_2 <- renderText({
-    HTML(paste0(
-      "<b>Type:</b> pmsignature P", index2(), "</br>",
-      "<b>", "Cancer Membership:</b> ", paste(names(which(pm_corr[index2(), ] == 1)), collapse = ", ")
-    ))
-  })
-
-  # the most similar signature
-
-  output$selected_sig_full_2_1 <- renderPlot({
-    visPMS_full_modified(sig_full[, rank1() + 3], 3, FALSE)
-  })
-
-
-  output$selected_sig_text_2_1 <- renderText({
-    HTML(paste(
-      "<b>Type:</b> COSIMIC signature ", paste0("C", rank1()), "</br>",
-      "<b>Similarity(highest):</b> ", corr_mat[index2(), rank1()] %>% round(3), "</br>", "</b>",
-      "<b>", "Cancer Membership:", "</b>",
-      paste(names(which(cosmic_corr[rank1(), ] == 1)), collapse = ", ")
-    ))
-  })
-
-  # self-defined signature
-  output$selected2_1 <- renderValueBox({
+  output$selected2_v2_1 <- renderValueBox({
     valueBox(
-      paste0("P", index2()), "pmsignature",
+      paste0("P", index2_v2()), "pmsignature",
       icon = icon("list"),
       color = "blue"
     )
   })
-
-  output$highest2 <- renderValueBox({
+  
+  output$highest2_v2 <- renderValueBox({
     valueBox(
-      paste0("C", rank1()), "Most simliar COSMIC", icon("thumbs-up", lib = "glyphicon"),
+      paste0("C", rank1_v2()), "Most simliar COSMIC", icon("thumbs-up", lib = "glyphicon"),
       color = "green"
     )
   })
-
-  output$selected2_2 <- renderValueBox({
+  
+  output$selected2_v2_2 <- renderValueBox({
     valueBox(
-      paste0("C", indexS2()), "COSMIC input",
+      paste0("C", indexS2_v2()), "COSMIC input",
       icon = icon("user"),
       color = "yellow"
     )
   })
-
-
-  output$selected_sig_full_2_2 <- renderPlot({
-    visPMS_full_modified(sig_full[, indexS2() + 3], 3, FALSE)
-  })
-
-
-  output$selected_sig_text_2_2 <- renderText({
-    HTML(paste(
-      "<b>Type:</b> COSIMIC signature ", paste0("C", indexS2()), "</br>",
-      "<b>Similarity(selected):</b> ", corr_mat[index2(), indexS2()] %>% round(3), "</br>", "</b>",
-      "<b>", "Cancer Membership:", "</b>",
-      paste(names(which(cosmic_corr[indexS(), ] == 1)), collapse = ", ")
+  
+  output$selected_sig_text_v2_2 <- renderText({
+    HTML(paste0(
+      "<b>Type:</b> pmsignature P", index2_v2(), "</br>",
+      "<b>", "Cancer Membership:</b> ", paste(names(which(pm_corr[index2_v2(), ] == 1)), collapse = ", ")
     ))
   })
+  
+  output$selected_sig_full_v2_2 <- renderPlot({
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index2_v2()]], c(6, 4, 4)), 3, FALSE)
+  })
+  
+  output$selected_sig_2_v2_1 <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[index2_v2()]], 5, isScale = TRUE)
+  })
+  
+  # the most similar signature
+  output$selected_sig_text_2_v2_1 <- renderText({
+    HTML(paste(
+      "<b>Type:</b> COSIMIC signature ", paste0("C", rank1_v2()), "</br>",
+      "<b>Similarity(highest):</b> ", corr_mat_v2[index2_v2(), rank1_v2()] %>% round(3), "</br>", "</b>",
+      "<b>", "Cancer Membership:", "</b>",
+      paste(names(which(cosmic_corr_v2[rank1_v2(), ] == 1)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_full_2_v2_1 <- renderPlot({
+    visPMS_full_modified(sig_full_v2[, rank1_v2() + 3], 3, FALSE)
+  })
 
+  output$selected_sig_text_2_v2_2 <- renderText({
+    HTML(paste(
+      "<b>Type:</b> COSIMIC signature ", paste0("C", indexS2_v2()), "</br>",
+      "<b>Similarity(selected):</b> ", corr_mat_v2[index2_v2(), indexS2_v2()] %>% round(3), "</br>", "</b>",
+      "<b>", "Cancer Membership:", "</b>",
+      paste(names(which(cosmic_corr_v2[indexS2_v2(), ] == 1)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_full_2_v2_2 <- renderPlot({
+    visPMS_full_modified(sig_full_v2[, indexS2_v2() + 3], 3, FALSE)
+  })
 
+  ###########
+  # Page 2-v3
+  ###########
+  
+  index2_v3 <- reactive({
+    as.numeric(stringr::str_extract(input$N_D_v3,"\\d+"))
+  })
+  
+  indexS2_v3 <- reactive({
+    as.character(input$N_D_S_v3)
+  })
+  
+  rank1_v3 <- reactive({
+    as.character(names(sort(corr_mat_v3[index2_v3(), ], decreasing = TRUE)[1:1]))
+  })
+  
+  output$selected_sig_2_v3 <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[index2_v3()]], 5, isScale = TRUE)
+  })
+  
+  output$corrplot2_v3_1 <- renderPlot({
+    corrplot(pm_corr[index2_v3(), , drop = FALSE],
+             is.corr = FALSE, bg = "#F8F8FF",
+             col = myCol(200), tl.col = "black",
+             tl.cex = 1.2, cl.pos = "n"
+    )
+  })
+  
+  output$mytable2_v3 <- renderDataTable({
+    table <- cbind(
+      `pmsignature` = paste0("P", index2_v3()),
+      `COSMIC v3 Signature` = colnames(corr_mat_v3),
+      `Similarity` = round(corr_mat_v3[index2_v3(), ], 3)
+    )
+    rownames(table) <- NULL
+    table <- table[order(table[, 3], decreasing = TRUE), ]
+    datatable(table, options = list(
+      pageLength = 3, searching = FALSE,
+      pagingType = "simple", lengthChange = FALSE
+    )) %>%
+      formatStyle(columns = 1:3, "text-align" = "center")
+  })
+  
+  output$corrplot2_v3_2 <- renderPlot({
+    corrplot(corr_mat_v3[index2_v3(), , drop = FALSE],
+             is.corr = FALSE,
+             tl.col = "black", method = "shade", col = col(200),
+             insig = "p-value", tl.offset = 1,
+             tl.cex = 0.8, cl.pos = "n"
+    )
+  })
+  
+  # Page 1: first two rows
+  col <- colorRampPalette(c("#BB4444", "#EE9988", "#FFFFFF", "#77AADD", "#4477AA"))
+  
+  output$selected2_v3_1 <- renderValueBox({
+    valueBox(
+      paste0("P", index2_v3()), "pmsignature",
+      icon = icon("list"),
+      color = "blue"
+    )
+  })
+  
+  output$highest2_v3 <- renderValueBox({
+    valueBox(
+      paste0(rank1_v3()), "Most simliar COSMIC", icon("thumbs-up", lib = "glyphicon"),
+      color = "green"
+    )
+  })
+  
+  output$selected2_v3_2 <- renderValueBox({
+    valueBox(
+      paste0("C", indexS2_v3()), "COSMIC input",
+      icon = icon("user"),
+      color = "yellow"
+    )
+  })
+  
+  output$selected_sig_text_v3_2 <- renderText({
+    HTML(paste0(
+      "<b>Type:</b> pmsignature P", index2_v3(), "</br>",
+      "<b>", "Cancer Membership:</b> ", paste(names(which(pm_corr[index2_v3(), ] == 1)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_full_v3_2 <- renderPlot({
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index2_v3()]], c(6, 4, 4)), 3, FALSE)
+  })
+  
+  output$selected_sig_2_v3_1 <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[index2_v3()]], 5, isScale = TRUE)
+  })
+  
+  # the most similar signature
+  output$selected_sig_text_2_v3_1 <- renderText({
+    HTML(paste(
+      "<b>Type:</b> COSIMIC signature ", paste0(rank1_v3()), "</br>",
+      "<b>Similarity(highest):</b> ", corr_mat_v3[index2_v3(), rank1_v3()] %>% round(3), "</br>", "</b>",
+      "<b>", "Cancer Membership:", "</b>",
+      paste(names(which(cosmic_corr_v3[rank1_v3(), ] > 0)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_full_2_v3_1 <- renderPlot({
+    visPMS_full_modified(sig_full_v3[, rank1_v3()], 3, FALSE)
+  })
+  
+  output$selected_sig_text_2_v3_2 <- renderText({
+    HTML(paste(
+      "<b>Type:</b> COSIMIC signature ", paste0(indexS2_v3()), "</br>",
+      "<b>Similarity(selected):</b> ", corr_mat_v3[index2_v3(), indexS2_v3()] %>% round(3), "</br>", "</b>",
+      "<b>", "Cancer Membership:", "</b>",
+      paste(names(which(cosmic_corr_v3[indexS2_v3(), ] > 0)), collapse = ", ")
+    ))
+  })
+  
+  output$selected_sig_full_2_v3_2 <- renderPlot({
+    visPMS_full_modified(sig_full_v3[, indexS2_v3()], 3, FALSE)
+  })
+  
 
-  ##########
-  # Page 3.1
-  ##########
+  ########
+  # Page 3
+  ########
+  # input file 
   fu_vector <- reactive({
     file1 <- input$file1
     
     if (is.null(file1))
-      return(sig_full[,4])
+      return(sig_full_v2[,4])
     
     read.table(file=file1$datapath, header = input$header1)[,1]
   })
   
-  
+  # input file plot
   output$similar_full <- renderPlot({
     visPMS_full_modified(fu_vector(), 3, FALSE)
   })
 
-  corr_full <- reactive({
-    corr_full <- rep(NA, dim(sig_full)[2] - 3)
-    for (i in 1:(dim(sig_full)[2] - 3)) {
-      corr_full[i] <- getCosDistance(fu_vector(), sig_full[, i + 3])
+  # correlation with v2
+  corr_full_v2 <- reactive({
+    corr_full_v2 <- rep(NA, dim(sig_full_v2)[2] - 3)
+    for (i in 1:(dim(sig_full_v2)[2] - 3)) {
+      corr_full_v2[i] <- getCosDistance(fu_vector(), sig_full_v2[, i + 3])
     }
-    corr_full
+    corr_full_v2
   })
 
-  corr_vec_full_pm <- reactive({
-    corr_vec_full_pm <- rep(NA, length(Fs))
+  # correlation with pm
+  corr_vec_full_pm<- reactive({
+    corr_vec_full_pm_v2 <- rep(NA, length(Fs))
     for (i in 1:length(Fs)) {
       input_sig <- convertSignatureMatrixToVector(Fs[[i]][-6, ], c(6, 4, 4))
-      corr_vec_full_pm[i] <- getCosDistance(fu_vector(), input_sig)
+      corr_vec_full_pm_v2[i] <- getCosDistance(fu_vector(), input_sig)
     }
-    corr_vec_full_pm
+    corr_vec_full_pm_v2
+  })
+  
+  # correlation with v3
+  corr_full_v3 <- reactive({
+    corr_full_v3 <- rep(NA, dim(sig_full_v3)[2] - 2)
+    for (i in 1:(dim(sig_full_v3)[2] - 2)) {
+      corr_full_v3[i] <- getCosDistance(fu_vector(), sig_full_v3[, i + 2])
+    }
+    corr_full_v3
   })
 
-  output$fu_box <- renderValueBox({
-    valueBox(
-      max(corr_full()) %>% round(3) %>% sprintf("%1.3f", .),
-      paste0("Similarity"),
-      color = "blue"
-    )
-  })
-
-  output$fu_box2 <- renderValueBox({
-    valueBox(
-      max(corr_vec_full_pm()) %>% round(3) %>% sprintf("%1.3f", .),
-      paste0("Similarity"),
-      color = "green"
-    )
-  })
-
-  output$fu_table <- renderDataTable({
+  # table with v2
+  output$fu_table_v2 <- renderDataTable({
     table <- cbind(
-      `COSMIC signature` = paste0("C", 1:length(corr_full())),
-      `Cosine Similarity` = round(corr_full(), 3)
+      `COSMIC signature` = paste0("C", 1:length(corr_full_v2())),
+      `Cosine Similarity` = round(corr_full_v2(), 3)
     )
     table <- table[order(table[, 2], decreasing = TRUE), ]
     rownames(table) <- NULL
@@ -345,7 +564,8 @@ server <- function(input, output) {
       formatStyle(columns = 1:3, "text-align" = "center")
   }, server = TRUE)
 
-  output$fu_table2 <- renderDataTable({
+  # table with pm
+  output$fu_table_pm <- renderDataTable({
     table <- cbind(
       `pmsignature` = paste0("P", 1:length(corr_vec_full_pm())),
       `Cosine Similarity` = round(corr_vec_full_pm(), 3)
@@ -359,51 +579,108 @@ server <- function(input, output) {
       formatStyle(columns = 1:3, "text-align" = "center")
   }, server = TRUE)
   
-  output$fu_text <- renderText({
+  # table with v3
+  output$fu_table_v3 <- renderDataTable({
+    table <- cbind(
+      `COSMIC signature` = colnames(sig_full_v3)[-c(1:2)],
+      `Cosine Similarity` = round(corr_full_v3(), 3)
+    )
+    table <- table[order(table[, 2], decreasing = TRUE), ]
+    rownames(table) <- NULL
+    datatable(table, options = list(
+      pageLength = 3, searching = FALSE,
+      pagingType = "simple", lengthChange = FALSE
+    )) %>%
+      formatStyle(columns = 1:3, "text-align" = "center")
+  }, server = TRUE)  
+  
+  # text with v2
+  output$fu_text_v2 <- renderText({
     if (is.null(input$fu_table_rows_selected)){
-      paste0("COSMIC signature C", which.max(corr_full()))
+      paste0("COSMIC signature C", which.max(corr_full_v2()))
     }
-    
-      
   })
   
-  output$fu_text2 <- renderText({
+  # text with pm
+  output$fu_text_pm <- renderText({
     paste0("pmsignature P", which.max(corr_vec_full_pm()))
   })
   
-  output$fu_plot <- renderPlot({
-    visPMS_full_modified(sig_full[, which.max(corr_full()) + 3], 3, FALSE)
+  # text with v3
+  output$fu_text_v3 <- renderText({
+    if (is.null(input$fu_table_rows_selected)){
+      paste0("COSMIC signature ", colnames(sig_full_v3)[which.max(corr_full_v3())+2])
+    }
   })
   
-  output$fu_plot2 <- renderPlot({
+  # plot with v2
+  output$fu_plot_v2<- renderPlot({
+    visPMS_full_modified(sig_full_v2[, which.max(corr_full_v2()) + 3], 3, FALSE)
+  })
+  
+  # plot with pm
+  output$fu_plot_pm <- renderPlot({
     pmsignature:::visPMS_ind(Fs[[which.max(corr_vec_full_pm())]][-6, ], 5, isScale = TRUE)
   })
   
-  output$selected_sig_text_3_1 <- renderText({
-    HTML(paste(
-      intersect(names(which(cosmic_corr[which.max(corr_full()), ] == 1)), 
-                names(which(pm_corr[which.max(corr_vec_full_pm()), ] == 1))), collapse = ", "
-    ))
+  # plot with v3
+  output$fu_plot_v3<- renderPlot({
+    visPMS_full_modified(sig_full_v3[, which.max(corr_full_v3()) + 2], 3, FALSE) 
+  })
+
+  # box with v2
+  output$fu_box_v2 <- renderValueBox({
+    valueBox(
+      max(corr_full_v2()) %>% round(3) %>% sprintf("%1.3f", .),
+      paste0("Similarity"),
+      color = "blue"
+    )
   })
   
-  output$selected_sig_text_3_2 <- renderText({
+  # box with pm
+  output$fu_box_pm <- renderValueBox({
+    valueBox(
+      max(corr_vec_full_pm()) %>% round(3) %>% sprintf("%1.3f", .),
+      paste0("Similarity"),
+      color = "green"
+    )
+  })
+  
+  # box with v3
+  output$fu_box_v3 <- renderValueBox({
+    valueBox(
+      max(corr_full_v3()) %>% round(3) %>% sprintf("%1.3f", .),
+      paste0("Similarity"),
+      color = "aqua"
+    )
+  })
+  
+  # sig text 1 (v2 only)
+  output$selected_sig_text_fu_v2 <- renderText({
     HTML(paste0(
-      setdiff(names(which(cosmic_corr[which.max(corr_full()), ] == 1)), 
-              names(which(pm_corr[which.max(corr_vec_full_pm()), ] == 1))), collapse = ", "
+      names(which(cosmic_corr_v2[which.max(corr_full_v2()), ] == 1)), collapse = ", "
     ))
   })
 
-  output$selected_sig_text_3_3 <- renderText({
+  # sig text 2 (pm only)
+  output$selected_sig_text_fu_pm <- renderText({
     HTML(paste(
-      setdiff(names(which(pm_corr[which.max(corr_vec_full_pm()), ] == 1)), 
-              names(which(cosmic_corr[which.max(corr_full()), ] == 1))), collapse = ", "
+      names(which(pm_corr[which.max(corr_vec_full_pm()), ] == 1)), collapse = ", "
+    ))
+  })
+  
+  # sig text 3 (v3 only)
+  output$selected_sig_text_fu_v3 <- renderText({
+    HTML(paste0(
+      names(which(cosmic_corr_v3[which.max(corr_full_v3()), ] > 0)), collapse = ", "
     ))
   })
 
   ##########
-  # Page 3.2
+  # Page 4
   ##########
   
+  # input file
   pm_vector <- reactive({
     file2 <- input$file2
     
@@ -413,114 +690,168 @@ server <- function(input, output) {
     read.table(file=file2$datapath, header = input$header2, sep = ",")
   })
   
+  # input file plot
   output$similar_pm <- renderPlot({
     pmsignature:::visPMS_ind(as.matrix(pm_vector()),
       5, isScale = TRUE
     )
   })
-
-  corr_vec <- reactive({
-    corr_vec <- rep(NA, length(Fs))
+  
+  # correlation with v2 
+  corr_vec_v2 <- reactive({
+    corr_vec_v2 <- rep(NA, dim(sig_full_v2)[2] - 3)
+    for (i in 1:(dim(sig_full_v2)[2] - 3)) {
+      input_sig <- convertSignatureMatrixToVector(as.matrix(pm_vector()), c(6, 4, 4))
+      corr_vec_v2[i] <- getCosDistance(input_sig, sig_full_v2[, i + 3])
+    }
+    corr_vec_v2
+  })
+  
+  # correlation with v2
+  corr_vec_pm <- reactive({
+    corr_vec_pm <- rep(NA, length(Fs))
     for (i in 1:length(Fs)) {
       full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6, 4, 4, 4, 4))
       input_sig <- convertSignatureMatrixToVector(as.matrix(pm_vector()), c(6, 4, 4, 4, 4))
-      corr_vec[i] <- getCosDistance(input_sig, full_sig)
+      corr_vec_pm[i] <- getCosDistance(input_sig, full_sig)
     }
-    corr_vec
+    corr_vec_pm
   })
 
-  corr_vec_full <- reactive({
-    corr_vec_full <- rep(NA, dim(sig_full)[2] - 3)
-    for (i in 1:(dim(sig_full)[2] - 3)) {
+  # correlation with v3
+  corr_vec_v3 <- reactive({
+    corr_vec_v3 <- rep(NA, dim(sig_full_v3)[2] - 2)
+    for (i in 1:(dim(sig_full_v3)[2] - 2)) {
       input_sig <- convertSignatureMatrixToVector(as.matrix(pm_vector()), c(6, 4, 4))
-      corr_vec_full[i] <- getCosDistance(input_sig, sig_full[, i + 3])
+      corr_vec_v3[i] <- getCosDistance(input_sig, sig_full_v3[, i + 2])
     }
-    corr_vec_full
+    corr_vec_v3
   })
 
-  output$pm_box <- renderValueBox({
+  # table with v2
+  output$pm_table_v2 <- renderDataTable({
+    table <- cbind(
+      `COSMIC signature` = paste0("C", 1:length(corr_vec_v3())),
+      `Cosine Similarity` = round(corr_vec_v3(), 3)
+    )
+    table <- table[order(table[, 2], decreasing = TRUE), ]
+    rownames(table) <- NULL
+    datatable(table, options = list(
+      pageLength = 3, searching = FALSE,
+      pagingType = "simple", lengthChange = FALSE
+    )) %>%
+      formatStyle(columns = 1:3, "text-align" = "center")
+  })
+  
+  # table with pm
+  output$pm_table_pm <- renderDataTable({
+    table <- cbind(
+      `pmsignature` = paste0("P", 1:length(corr_vec_pm())),
+      `Cosine Similarity` = round(corr_vec_pm(), 3)
+    )
+    table <- table[order(table[, 2], decreasing = TRUE), ]
+    rownames(table) <- NULL
+    datatable(table, options = list(
+      pageLength = 3, searching = FALSE,
+      pagingType = "simple", lengthChange = FALSE
+    )) %>%
+      formatStyle(columns = 1:3, "text-align" = "center")
+  })
+  
+  # table with v3
+  output$pm_table_v3 <- renderDataTable({
+    table <- cbind(
+      `COSMIC signature` = colnames(sig_full_v3)[-c(1:2)],
+      `Cosine Similarity` = round(corr_vec_v3(), 3)
+    )
+    table <- table[order(table[, 2], decreasing = TRUE), ]
+    rownames(table) <- NULL
+    datatable(table, options = list(
+      pageLength = 3, searching = FALSE,
+      pagingType = "simple", lengthChange = FALSE
+    )) %>%
+      formatStyle(columns = 1:3, "text-align" = "center")
+  })
+  
+  # box with v2
+  output$pm_box_v2 <- renderValueBox({
     valueBox(
-      max(corr_vec()) %>% round(3) %>% sprintf("%1.3f", .),
+      max(corr_vec_v2()) %>% round(3) %>% sprintf("%1.3f", .),
       paste0("Similarity"),
       color = "blue"
     )
   })
 
-  output$pm_box2 <- renderValueBox({
+  # box with pm
+  output$pm_box_pm <- renderValueBox({
     valueBox(
-      max(corr_vec_full()) %>% round(3) %>% sprintf("%1.3f", .),
+      max(corr_vec_pm()) %>% round(3) %>% sprintf("%1.3f", .),
       paste0("Similarity"),
       color = "green"
     )
   })
 
-  output$pm_text <- renderText({
-    paste0("pmsignature P", which.max(corr_vec()))
-  })
-
-  output$pm_text2 <- renderText({
-    paste0("COSMIC signature C", which.max(corr_vec_full()))
-  })
-
-  output$pm_plot <- renderPlot({
-    pmsignature:::visPMS_ind(Fs[[which.max(corr_vec())]][-6, ], 5, isScale = TRUE)
-  })
-
-  output$pm_plot2 <- renderPlot({
-    visPMS_full_modified(sig_full[, which.max(corr_vec_full()) + 3], 3, FALSE)
-  })
-
-  output$pm_table <- renderDataTable({
-    table <- cbind(
-      `pmsignature` = paste0("P", 1:length(corr_vec())),
-      `Cosine Similarity` = round(corr_vec(), 3)
+  # box with v3
+  output$pm_box_v3 <- renderValueBox({
+    valueBox(
+      max(corr_vec_v3()) %>% round(3) %>% sprintf("%1.3f", .),
+      paste0("Similarity"),
+      color = "aqua"
     )
-    table <- table[order(table[, 2], decreasing = TRUE), ]
-    rownames(table) <- NULL
-    datatable(table, options = list(
-      pageLength = 3, searching = FALSE,
-      pagingType = "simple", lengthChange = FALSE
-    )) %>%
-      formatStyle(columns = 1:3, "text-align" = "center")
-  })
-
-  output$pm_table2 <- renderDataTable({
-    table <- cbind(
-      `COSMIC signature` = paste0("C", 1:length(corr_vec_full())),
-      `Cosine Similarity` = round(corr_vec_full(), 3)
-    )
-    table <- table[order(table[, 2], decreasing = TRUE), ]
-    rownames(table) <- NULL
-    datatable(table, options = list(
-      pageLength = 3, searching = FALSE,
-      pagingType = "simple", lengthChange = FALSE
-    )) %>%
-      formatStyle(columns = 1:3, "text-align" = "center")
   })
   
+  # text with v2
+  output$pm_text_v2 <- renderText({
+    paste0("COSMIC signature C", which.max(corr_vec_v2()))
+  })
+
+  # text with pm
+  output$pm_text_pm <- renderText({
+    paste0("pmsignature P", which.max(corr_vec_pm()))
+  })
   
-  output$selected_sig_text_4_1 <- renderText({
+  # text with v3
+  output$pm_text_v3 <- renderText({
+    paste0("COSMIC signature ", colnames(sig_full_v3)[which.max(corr_vec_v3())+2])
+  })
+
+  # plot with v2
+  output$pm_plot_v2 <- renderPlot({
+    visPMS_full_modified(sig_full_v2[, which.max(corr_vec_v2()) + 3], 3, FALSE)
+  })
+  
+  # plot with pm
+  output$pm_plot_pm <- renderPlot({
+    pmsignature:::visPMS_ind(Fs[[which.max(corr_vec_pm())]][-6, ], 5, isScale = TRUE)
+  })
+
+  # plot with v3
+  output$pm_plot_v3 <- renderPlot({
+    visPMS_full_modified(sig_full_v3[, which.max(corr_vec_v3()) + 2], 3, FALSE)
+  })
+
+  # sig text with v2
+  output$selected_sig_text_pm_v2 <- renderText({
     HTML(paste(
-      intersect(names(which(pm_corr[which.max(corr_vec()), ] == 1)), 
-                names(which(cosmic_corr[which.max(corr_vec_full()), ] == 1))), collapse = ", "
+      names(which(cosmic_corr_v2[which.max(corr_vec_v2()), ] == 1)), collapse = ", "
     ))
   })
   
-  output$selected_sig_text_4_2 <- renderText({
+  # sig text with pm
+  output$selected_sig_text_pm_pm <- renderText({
     HTML(paste0(
-      setdiff(names(which(pm_corr[which.max(corr_vec()), ] == 1)), 
-              names(which(cosmic_corr[which.max(corr_vec_full()), ] == 1))), collapse = ", "
+      names(which(pm_corr[which.max(corr_vec_pm()), ] == 1)), collapse = ", "
     ))
   })
   
-  output$selected_sig_text_4_3 <- renderText({
+  # sig text with v3
+  output$selected_sig_text_pm_v3 <- renderText({
     HTML(paste(
-      setdiff(names(which(cosmic_corr[which.max(corr_vec_full()), ] == 1)), 
-              names(which(pm_corr[which.max(corr_vec()), ] == 1))), collapse = ", "
+      names(which(cosmic_corr_v3[which.max(corr_vec_v3()), ] > 0)), collapse = ", "
     ))
   })
   
-  
+  # download
   output$downloadData <- downloadHandler(
     filename = function() {
       "cosmic_signature_sample.csv"

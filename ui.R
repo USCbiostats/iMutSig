@@ -23,12 +23,18 @@ ui <- dashboardPage(
     sidebar <- dashboardSidebar(    
       sidebarMenu(
       id="mysidebar",
-      menuItem("COSMIC to pmsignature", icon = icon("chart-bar"), tabName = "page1"),
-      menuItem("pmsignature to COSMIC", icon = icon("cube"), tabName = "page2"),
+      menuItem("COSMIC to pmsignature", icon = icon("chart-bar"), startExpanded = TRUE,
+               menuSubItem('v2', tabName = "page1-v2"),
+               menuSubItem('v3', tabName = 'page1-v3')
+               ),
+      menuItem("pmsignature to COSMIC", icon = icon("cube"), startExpanded = TRUE,
+               menuSubItem('v2', tabName = "page2-v2"),
+               menuSubItem('v3', tabName = 'page2-v3')
+               ),
       menuItem("Input a signature", icon = icon("sign-in-alt"),  startExpanded = TRUE,
                menuSubItem('COSMIC signature', tabName = 'page3'),
                menuSubItem('pmsignature', tabName = 'page4')
-        ), 
+               ), 
       menuItem("About iMutSig", icon = icon("info-circle"), tabName = "page5")
       )
     ), 
@@ -51,19 +57,19 @@ ui <- dashboardPage(
       useShinyjs(),
       
       tabItems(
-        tabItem(tabName = "page1",
+        tabItem(tabName = "page1-v2",
                 # 1st row 
                 fluidRow(
                   box(
                     width = 5, 
-                    title = paste("Chosen a COSMIC signature"),
-                    plotOutput("selected_sig_1", height = 200)
+                    title = paste("Chosen a COSMIC v2 signature"),
+                    plotOutput("selected_sig_1_v2", height = 200)
                   ),
                   
                   box(
                     width = 7, 
                     title = "Its membership among 40 cancer types", 
-                    plotOutput("corrplot1_2", height = 200)
+                    plotOutput("corrplot1_2_v2", height = 200)
                   )
                 ),
                 
@@ -71,37 +77,37 @@ ui <- dashboardPage(
                 fluidRow(
                   box(width = 4,
                       style="font-size:120%",
-                      dataTableOutput("mytable1")
+                      dataTableOutput("mytable1_v2")
                   ),
                   
                   box(width = 8, 
                       title = "Its cosine similarity to the pmsignatures",
-                      plotOutput("corrplot1_1", height = 180))
+                      plotOutput("corrplot1_1_v2", height = 180))
                 ),
                 
                 fluidRow(
                   valueBox(width = 2, color = "black",
-                           "Choose", "a COSMIC signature"),
+                           "Choose", "a COSMIC v2 signature"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_F", label="COSMIC",
+                      selectInput(inputId = "N_F_v2", label="COSMIC",
                                   choices = paste0("C",1:30),
-                                  selected = 1)
+                                  selected = 1) #N_F_v2
                   ),
                   
                   valueBoxOutput(width = 2,
-                                 "selected1_1"),
+                                 "selected1_v2_1"),
                   
                   valueBoxOutput(width = 2,
-                                 "highest"),
+                                 "highest_v2"),
                   
                   valueBoxOutput(width = 2,
-                                 "selected1_2"),
+                                 "selected1_v2_2"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_S_D", label="pmsignature",
+                      selectInput(inputId = "N_S_D_v2", label="pmsignature",
                                   choices = paste0("P",1:27),
-                                  selected = 3)
+                                  selected = 3) #N_S_D_v2
                   )
                 ),
                 
@@ -111,12 +117,12 @@ ui <- dashboardPage(
                     width = 4,
                     title = "COSMIC signature:",
                     status = "primary", solidHeader = TRUE,
-                    uiOutput("selected_sig_text_1")
+                    uiOutput("selected_sig_text_1_v2")
                   ),
                 
                   box(
                     width = 6,
-                    plotOutput("selected_sig_full_1", height = 180)
+                    plotOutput("selected_sig_full_1_v2", height = 180)
                   ),
                   
                   box(
@@ -130,17 +136,17 @@ ui <- dashboardPage(
                     width = 4,             
                     status = "success", solidHeader = TRUE,
                     title = "Most similar pmsignature:",
-                    uiOutput(paste0('selected_sig_text_1_', 1))
+                    uiOutput(paste0('selected_sig_text_1_v2_', 1))
                   ), 
                   
                   box(
                     width = 6, 
-                    plotOutput(paste0('selected_sig_pm_full_1_', 1), height = 180)
+                    plotOutput(paste0('selected_sig_pm_full_1_v2_', 1), height = 180)
                   ),
                   
                   box(
                     width = 2,                                 
-                    plotOutput(paste0('selected_sig_full_1_', 1), height = 180)
+                    plotOutput(paste0('selected_sig_full_1_v2_', 1), height = 180)
                   )
                 ), 
                 
@@ -149,34 +155,147 @@ ui <- dashboardPage(
                     width = 4, 
                     title = "Selected pmsignature:",
                     status = "warning", solidHeader = TRUE,
-                    uiOutput(paste0('selected_sig_text_1_', 2))
+                    uiOutput(paste0('selected_sig_text_1_v2_', 2))
                   ), 
 
                   box(
                     width = 6,
-                    plotOutput(paste0('selected_sig_pm_full_1_', 2), height = 180)
+                    plotOutput(paste0('selected_sig_pm_full_1_v2_', 2), height = 180)
                   ),
                   
                   box(
                     width = 2,                                 
-                    plotOutput(paste0('selected_sig_full_1_', 2), height = 180)
+                    plotOutput(paste0('selected_sig_full_1_v2_', 2), height = 180)
                   )
                 )
         ),
 
-        tabItem(tabName = "page2",
+        tabItem(tabName = "page1-v3",
+                # 1st row 
+                fluidRow(
+                  box(
+                    width = 5, 
+                    title = paste("Chosen a COSMIC v3 signature"),
+                    plotOutput("selected_sig_1_v3", height = 200)
+                  ),
+                  
+                  box(
+                    width = 7, 
+                    title = "Its membership among 37 cancer types", 
+                    plotOutput("corrplot1_2_v3", height = 200)
+                  )
+                ),
+                
+                # 2nd row 
+                fluidRow(
+                  box(width = 4,
+                      style="font-size:120%",
+                      dataTableOutput("mytable1_v3")
+                  ),
+                  
+                  box(width = 8, 
+                      title = "Its cosine similarity to the pmsignatures",
+                      plotOutput("corrplot1_1_v3", height = 180))
+                ),
+                
+                fluidRow(
+                  valueBox(width = 2, color = "black",
+                           "Choose", "a COSMIC v3 signature"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_F_v3", label="COSMIC",
+                                  choices = colnames(corr_mat_v3),
+                                  selected = 1) #N_F_v3
+                  ),
+                  
+                  valueBoxOutput(width = 2,
+                                 "selected1_v3_1"),
+                  
+                  valueBoxOutput(width = 2,
+                                 "highest_v3"),
+                  
+                  valueBoxOutput(width = 2,
+                                 "selected1_v3_2"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_S_D_v3", label="pmsignature",
+                                  choices = paste0("P",1:27),
+                                  selected = 3) #N_S_D_v3
+                  )
+                ),
+                
+                # 3nd row 
+                fluidRow(
+                  box( 
+                    width = 4,
+                    title = "COSMIC signature:",
+                    status = "primary", solidHeader = TRUE,
+                    uiOutput("selected_sig_text_1_v3")
+                  ),
+                  
+                  box(
+                    width = 6,
+                    plotOutput("selected_sig_full_1_v3", height = 180)
+                  ),
+                  
+                  box(
+                    width = 2
+                  )
+                  
+                ),
+                
+                fluidRow(
+                  box(
+                    width = 4,             
+                    status = "success", solidHeader = TRUE,
+                    title = "Most similar pmsignature:",
+                    uiOutput(paste0('selected_sig_text_1_v3_', 1))
+                  ), 
+                  
+                  box(
+                    width = 6, 
+                    plotOutput(paste0('selected_sig_pm_full_1_v3_', 1), height = 180)
+                  ),
+                  
+                  box(
+                    width = 2,                                 
+                    plotOutput(paste0('selected_sig_full_1_v3_', 1), height = 180)
+                  )
+                ), 
+                
+                fluidRow(
+                  box(
+                    width = 4, 
+                    title = "Selected pmsignature:",
+                    status = "warning", solidHeader = TRUE,
+                    uiOutput(paste0('selected_sig_text_1_v3_', 2))
+                  ), 
+                  
+                  box(
+                    width = 6,
+                    plotOutput(paste0('selected_sig_pm_full_1_v3_', 2), height = 180)
+                  ),
+                  
+                  box(
+                    width = 2,                                 
+                    plotOutput(paste0('selected_sig_full_1_v3_', 2), height = 180)
+                  )
+                )
+        ),
+
+        tabItem(tabName = "page2-v2",
                 # First tab content
                 fluidRow(
                   box(
                     width = 4,
                     title = paste("Chosen pmsignature"),
-                    plotOutput("selected_sig_2", height = 200)
+                    plotOutput("selected_sig_2_v2", height = 200)
                   ),
                   
                   box(
                     width = 8, 
                     title = "Its membership among 30 cancer types",
-                    plotOutput("corrplot2_1", height = 200)
+                    plotOutput("corrplot2_v2_1", height = 200)
                   )
                   
                 ),
@@ -186,12 +305,12 @@ ui <- dashboardPage(
                 fluidRow(
                   box(width = 4,
                       style="font-size:120%",
-                      dataTableOutput("mytable2")
+                      dataTableOutput("mytable2_v2")
                   ),
                   
                   box(width = 8, 
                       title = "Its cosine similarity to the COSMIC signatures",
-                      plotOutput("corrplot2_2", height = 200))
+                      plotOutput("corrplot2_v2_2", height = 200))
                 ),
                 
                 # 3rd Row
@@ -201,46 +320,44 @@ ui <- dashboardPage(
                            "Choose", "a pmsignature"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_D", label="pmsignature",
+                      selectInput(inputId = "N_D_v2", label="pmsignature",
                                   choices = paste0("P",1:27),
                                   selected = 1)
                       
                   ),
                   
                   valueBoxOutput(width = 2,
-                                 "selected2_1"),
-                  
+                                 "selected2_v2_1"),
+                
+                  valueBoxOutput(width = 2,
+                                 "highest2_v2"),
                   
                   valueBoxOutput(width = 2,
-                                 "highest2"),
-                  
-                  valueBoxOutput(width = 2,
-                                 "selected2_2"),
+                                 "selected2_v2_2"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_D_S", label="COSMIC",
+                      selectInput(inputId = "N_D_S_v2", label="COSMIC",
                                   choices = paste0("C",1:30),
                                   selected = 3)
                   )
                 ),
-                
               
                 fluidRow(
                   box(
                     width = 4,
                     title = "pmsignature in COSMIC signature style:",
                     status = "primary", solidHeader = TRUE,
-                    uiOutput("selected_sig_text_2")
+                    uiOutput("selected_sig_text_v2_2")
                   ), 
                   
                   box(
                     width = 6, 
-                    plotOutput("selected_sig_full_2", height = 180)
+                    plotOutput("selected_sig_full_v2_2", height = 180)
                   ), 
                   
                   box(
                     width = 2, 
-                    plotOutput("selected_sig_2_1", height = 180)
+                    plotOutput("selected_sig_2_v2_1", height = 180)
                   )
                   
                 ),
@@ -251,12 +368,12 @@ ui <- dashboardPage(
                     width = 4,             
                     status = "success", solidHeader = TRUE,
                     title = "Most similar COSMIC signature:",
-                    uiOutput(paste0('selected_sig_text_2_', 1))
+                    uiOutput(paste0('selected_sig_text_2_v2_', 1))
                   ), 
                   
                   box(
                     width = 6, 
-                    plotOutput(paste0('selected_sig_full_2_', 1), height = 180)
+                    plotOutput(paste0('selected_sig_full_2_v2_', 1), height = 180)
                   ),
                   
                   box(
@@ -269,12 +386,129 @@ ui <- dashboardPage(
                     width = 4, 
                     title = "Selected COSMIC signature:",
                     status = "warning", solidHeader = TRUE,
-                    uiOutput(paste0('selected_sig_text_2_', 2))
+                    uiOutput(paste0('selected_sig_text_2_v2_', 2))
                   ), 
                   
                   box(
                     width = 6,
-                    plotOutput(paste0('selected_sig_full_2_', 2), height = 180)
+                    plotOutput(paste0('selected_sig_full_2_v2_', 2), height = 180)
+                  ), 
+                  
+                  box(
+                    width = 2
+                  )
+                )
+              ),
+        
+        tabItem(tabName = "page2-v3",
+                # First tab content
+                fluidRow(
+                  box(
+                    width = 4,
+                    title = paste("Chosen pmsignature"),
+                    plotOutput("selected_sig_2_v3", height = 200)
+                  ),
+                  
+                  box(
+                    width = 8, 
+                    title = "Its membership among 30 cancer types",
+                    plotOutput("corrplot2_v3_1", height = 200)
+                  )
+                  
+                ),
+                
+                # 2nd Row 
+                
+                fluidRow(
+                  box(width = 4,
+                      style="font-size:120%",
+                      dataTableOutput("mytable2_v3")
+                  ),
+                  
+                  box(width = 8, 
+                      title = "Its cosine similarity to the COSMIC signatures",
+                      plotOutput("corrplot2_v3_2", height = 200))
+                ),
+                
+                # 3rd Row
+                
+                fluidRow(
+                  valueBox(width = 2, color = "black",
+                           "Choose", "a pmsignature"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_D_v3", label="pmsignature",
+                                  choices = paste0("P",1:27),
+                                  selected = 1)
+                      
+                  ),
+                  
+                  valueBoxOutput(width = 2,
+                                 "selected2_v3_1"),
+                  
+                  valueBoxOutput(width = 2,
+                                 "highest2_v3"),
+                  
+                  valueBoxOutput(width = 2,
+                                 "selected2_v3_2"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_D_S_v3", label="COSMIC",
+                                  choices = colnames(corr_mat_v3),
+                                  selected = 3)
+                  )
+                ),
+                
+                fluidRow(
+                  box(
+                    width = 4,
+                    title = "pmsignature in COSMIC signature style:",
+                    status = "primary", solidHeader = TRUE,
+                    uiOutput("selected_sig_text_v3_2")
+                  ), 
+                  
+                  box(
+                    width = 6, 
+                    plotOutput("selected_sig_full_v3_2", height = 180)
+                  ), 
+                  
+                  box(
+                    width = 2, 
+                    plotOutput("selected_sig_2_v3_1", height = 180)
+                  )
+                  
+                ),
+                
+                
+                fluidRow(
+                  box(
+                    width = 4,             
+                    status = "success", solidHeader = TRUE,
+                    title = "Most similar COSMIC signature:",
+                    uiOutput(paste0('selected_sig_text_2_v3_', 1))
+                  ), 
+                  
+                  box(
+                    width = 6, 
+                    plotOutput(paste0('selected_sig_full_2_v3_', 1), height = 180)
+                  ),
+                  
+                  box(
+                    width = 2
+                  )
+                ), 
+                
+                fluidRow(
+                  box(
+                    width = 4, 
+                    title = "Selected COSMIC signature:",
+                    status = "warning", solidHeader = TRUE,
+                    uiOutput(paste0('selected_sig_text_2_v3_', 2))
+                  ), 
+                  
+                  box(
+                    width = 6,
+                    plotOutput(paste0('selected_sig_full_2_v3_', 2), height = 180)
                   ), 
                   
                   box(
@@ -285,8 +519,7 @@ ui <- dashboardPage(
         
         tabItem(tabName = "page3",
                 fluidRow( 
-                  box(height = "280px",
-                      title = "About input:", status = "warning", solidHeader = TRUE,
+                  box(title = "About input:", status = "warning", solidHeader = TRUE,
                       width = 4, 
                       "Please prepare a CSV file by putting your pmsignature into a column with no quotes.",
                       downloadButton('downloadData', label = "Download a sample CSV file", class = NULL),
@@ -300,82 +533,95 @@ ui <- dashboardPage(
                       
                   ), 
                   
-                  column(width = 4, 
-                    box(width = NULL, height = "280px",
-                        title = "COSMIC signature",
-                        status = "primary", solidHeader = TRUE,
-                        style="font-size:130%",
-                        dataTableOutput("fu_table")
-                    )
-                  ),
-                  
-                  column(width = 4, 
-                     box(width = NULL, height = "280px",
-                         title = "pmsignature", 
-                         status = "success", solidHeader = TRUE,
-                         style="font-size:130%",
-                         dataTableOutput("fu_table2")
-                    )
-                  )
-                ),
-                
-
-                
-                fluidRow(
                   box(width = 4, 
+                      height = "270px",
                       title = "Input COSMIC signature", status = "warning", solidHeader = TRUE,
                       plotOutput("similar_full", height = 170)
-                  ), 
-                  
-                  box(width = 4,
-                      title = textOutput("fu_text"), 
-                      status = "primary", solidHeader = TRUE,
-                      plotOutput("fu_plot", height = 170)
-                  ), 
-                  
-                  box(width = 4,
-                      title = textOutput("fu_text2"), 
-                      status = "success", solidHeader = TRUE,
-                      plotOutput("fu_plot2", height = 170)
-                  )
-                ), 
-                
-                fluidRow(
-                  column(width = 4, offset = 4, 
-                         valueBoxOutput(width = NULL, "fu_box")
-                  ),
-                  column(width = 4,  
-                         valueBoxOutput(width = NULL, "fu_box2"))
-                ), 
-                
-                fluidRow(
-                  column(width = 4),
-                  
-                  box(width = 8, title="Cancer membership in both COSMIC and pmsignature",  
-                      status = "danger", solidHeader = TRUE,
-                         uiOutput(paste0('selected_sig_text_3_', 1))
                   )
                 ),
                 
                 fluidRow(
-                  column(width = 4), 
-                  
-                  box(width = 4, title="Cancer membership only in COSMIC", status = "primary", 
-                      solidHeader = TRUE,
-                      uiOutput(paste0('selected_sig_text_3_', 2))
+                  column(width = 4, 
+                         box(width = NULL, height = "280px",
+                             title = "COSMIC v2 signature",
+                             status = "primary", solidHeader = TRUE,
+                             style="font-size:130%",
+                             dataTableOutput("fu_table_v2")
+                         )
                   ),
                   
-                  box(width = 4, title="Cancer membership only in pmsignature", status = "success", 
+                  column(width = 4, 
+                         box(width = NULL, height = "280px",
+                             title = "COSMIC v3 signature",
+                             status = "info", solidHeader = TRUE,
+                             style="font-size:130%",
+                             dataTableOutput("fu_table_v3")
+                         )
+                  ),
+                  
+                  column(width = 4, 
+                         box(width = NULL, height = "280px",
+                             title = "pmsignature", 
+                             status = "success", solidHeader = TRUE,
+                             style="font-size:130%",
+                             dataTableOutput("fu_table_pm")
+                         )
+                  )
+                ),
+                
+                fluidRow(
+                  box(width = 4, offset = 4, 
+                      title = textOutput("fu_text_v2"), 
+                      status = "primary", solidHeader = TRUE,
+                      plotOutput("fu_plot_v2", height = 170)
+                  ), 
+                  
+                  box(width = 4,
+                      title = textOutput("fu_text_v3"), 
+                      status = "info", solidHeader = TRUE,
+                      plotOutput("fu_plot_v3", height = 170)
+                  ),
+                  
+                  box(width = 4, offset = 4, 
+                      title = textOutput("fu_text_pm"), 
+                      status = "success", solidHeader = TRUE,
+                      plotOutput("fu_plot_pm", height = 170)
+                  )
+                ), 
+                
+                fluidRow(
+                  column(width = 4, 
+                         valueBoxOutput(width = NULL, "fu_box_v2")
+                  ),
+                  column(width = 4,  
+                         valueBoxOutput(width = NULL, "fu_box_v3")
+                  ),
+                  column(width = 4,  
+                         valueBoxOutput(width = NULL, "fu_box_pm")
+                  )
+                ), 
+                
+                fluidRow(
+                  box(width = 4, title="Cancer membership in COSMIC v2", status = "primary", 
                       solidHeader = TRUE,
-                      uiOutput(paste0('selected_sig_text_3_', 3))
+                      uiOutput("selected_sig_text_fu_v2")
+                  ),
+                  
+                  box(width = 4, title="Cancer membership in COSMIC v3", status = "info", 
+                      solidHeader = TRUE,
+                      uiOutput("selected_sig_text_fu_v3")
+                  ),
+                  
+                  box(width = 4, title="Cancer membership in pmsignature", status = "success", 
+                      solidHeader = TRUE,
+                      uiOutput("selected_sig_text_fu_pm")
                   )
                 )
         ), 
         
         tabItem(tabName = "page4",
               fluidRow( 
-                 box(height = "280px",
-                   title = "About input:", status = "warning", solidHeader = TRUE,
+                 box(title = "About input:", status = "warning", solidHeader = TRUE,
                    width = 4, 
                    "Please prepare a CSV file by putting your pmsignature into a matrix with no quotes.",
                    downloadButton('downloadData2', label = "Download a sample CSV file", class = NULL),
@@ -389,66 +635,86 @@ ui <- dashboardPage(
                    
                  ), 
                  
-                 box(width = 4, height = "280px",
-                     title = "pmsignature",
-                     status = "primary", solidHeader = TRUE,
-                     style="font-size:130%",
-                     dataTableOutput("pm_table")
-                 ), 
-                 
-                 box(width = 4, height = "280px",
-                     title = "COSMIC signature", 
-                     status = "success", solidHeader = TRUE,
-                     style="font-size:130%",
-                     dataTableOutput("pm_table2")
+                 box(width = 4, 
+                     height = "270px",
+                     title = "Input a pmsignature", status = "warning", solidHeader = TRUE,
+                     plotOutput("similar_pm", height = 200)
                  )
+    
               ),
               
-
                 
               fluidRow(
-                box(width = 4, 
-                    title = "Input a pmsignature", status = "warning", solidHeader = TRUE,
-                    plotOutput("similar_pm", height = 200)
-                ), 
-                
-                box(width = 4,
-                    title = textOutput("pm_text"), 
+                box(width = 4, height = "280px",
+                    title = "COSMIC signature", 
                     status = "primary", solidHeader = TRUE,
-                    plotOutput("pm_plot", height = 200)
-                ), 
+                    style="font-size:130%",
+                    dataTableOutput("pm_table_v2")
+                ),
                 
-                box(width = 4,
-                    title = textOutput("pm_text2"), 
+                box(width = 4, height = "280px",
+                    title = "COSMIC signature", 
+                    status = "info", solidHeader = TRUE,
+                    style="font-size:130%",
+                    dataTableOutput("pm_table_v3")
+                ),
+                
+                box(width = 4, height = "280px",
+                    title = "pmsignature",
                     status = "success", solidHeader = TRUE,
-                    plotOutput("pm_plot2", height = 200)
+                    style="font-size:130%",
+                    dataTableOutput("pm_table_pm")
                 )
               ), 
               
               fluidRow(
-                column(width = 4, offset = 4, 
-                       valueBoxOutput(width = NULL, "pm_box")
-                ),
-                valueBoxOutput(width = 4, "pm_box2")
-              ), 
-              
-              fluidRow(
-                column(width = 4),
+                box(width = 4,
+                    title = textOutput("pm_text_v2"), 
+                    status = "primary", solidHeader = TRUE,
+                    plotOutput("pm_plot_v2", height = 200)
+                ), 
                 
-                box(width = 8, title="Cancer membership in both COSMIC and pmsignature",  status = "danger", solidHeader = TRUE,
-                    uiOutput(paste0('selected_sig_text_4_', 1))
+                box(width = 4,
+                    title = textOutput("pm_text_v3"), 
+                    status = "info", solidHeader = TRUE,
+                    plotOutput("pm_plot_v3", height = 200)
+                ),
+                
+                box(width = 4,
+                    title = textOutput("pm_text_pm"), 
+                    status = "success", solidHeader = TRUE,
+                    plotOutput("pm_plot_pm", height = 200)
                 )
               ),
               
               fluidRow(
-                column(width = 4), 
-                
-                box(width = 4, title="Cancer membership only in pmsignature", status = "primary", solidHeader = TRUE,
-                    uiOutput(paste0('selected_sig_text_4_', 2))
+                column(width = 4, 
+                       valueBoxOutput(width = NULL, "pm_box_v2")
                 ),
                 
-                box(width = 4, title="Cancer membership only in COSMIC", status = "success", solidHeader = TRUE,
-                    uiOutput(paste0('selected_sig_text_4_', 3))
+                column(width = 4, 
+                       valueBoxOutput(width = NULL, "pm_box_v3")
+                ),
+                
+                column(width = 4, 
+                       valueBoxOutput(width = NULL, "pm_box_pm")
+                )
+              ), 
+              
+              fluidRow(
+                box(width = 4, title="Cancer membership in COSMIC v2", status = "primary", 
+                    solidHeader = TRUE,
+                    uiOutput("selected_sig_text_pm_v2")
+                ),
+                
+                box(width = 4, title="Cancer membership in COSMIC v3", status = "info", 
+                    solidHeader = TRUE,
+                    uiOutput("selected_sig_text_pm_v3")
+                ),
+                
+                box(width = 4, title="Cancer membership in pmsignature", status = "success", 
+                    solidHeader = TRUE,
+                    uiOutput("selected_sig_text_pm_pm")
                 )
               )
             ),
@@ -470,13 +736,13 @@ ui <- dashboardPage(
                 fluidRow(
                 box(width = 4, title = "About iMutSig", status = "danger", solidHeader = TRUE,
                     tags$h3("This Shiny app is dependent on:"),
-                    h4("- Catalogue of Somatic Mutations in Cancer (COSMIC)."),
+                    h4("- Catalogue of Somatic Mutations in Cancer (COSMIC), v2 and v3"),
                     h4("- pmsignature developed by Shiraishi et al."),
                     br(),
                     actionButton("about1",
                                  label = "COSMIC",
                                  icon = icon("laptop"),
-                                 onclick = sprintf("window.open('%s')", "https://cancer.sanger.ac.uk/cosmic")),
+                                 onclick = sprintf("window.open('%s')", "https://cancer.sanger.ac.uk/cosmic/signatures/")),
                     actionButton("about2",
                                  label = "pmsignature",
                                  icon = icon("github"),
@@ -519,8 +785,5 @@ ui <- dashboardPage(
       
       ),
     
-    
     dashboardPage(header, sidebar, body)
-    
 )
-
