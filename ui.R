@@ -24,12 +24,12 @@ ui <- dashboardPage(
       sidebarMenu(
       id="mysidebar",
       menuItem("COSMIC to pmsignature", icon = icon("chart-bar"), startExpanded = TRUE,
-               menuSubItem('v2', tabName = "page1-v2"),
-               menuSubItem('v3', tabName = 'page1-v3')
+               menuSubItem('v3 (latest)', tabName = "page1-v3"),
+               menuSubItem('v2', tabName = 'page1-v2')
                ),
       menuItem("pmsignature to COSMIC", icon = icon("cube"), startExpanded = TRUE,
-               menuSubItem('v2', tabName = "page2-v2"),
-               menuSubItem('v3', tabName = 'page2-v3')
+               menuSubItem('v3 (latest)', tabName = "page2-v3"),
+               menuSubItem('v2', tabName = 'page2-v2')
                ),
       menuItem("Input a signature", icon = icon("sign-in-alt"),  startExpanded = TRUE,
                menuSubItem('COSMIC signature', tabName = 'page3'),
@@ -721,22 +721,10 @@ ui <- dashboardPage(
         
         tabItem(tabName = "page5",
                 
-                # box(width = 4, title = "The iMutSig R pacakage",
-                #     h3(textOutput("caption"))
-                # ), 
-                # 
-                # box(width = 4, title = "Publication",
-                #     h3(textOutput("caption"))
-                # ), 
-                # 
-                # box(width = 4, title = "Contact Author",
-                #     h3(textOutput("caption"))
-                # ),
-                
                 fluidRow(
                 box(width = 4, title = "About iMutSig", status = "danger", solidHeader = TRUE,
                     tags$h3("This Shiny app is dependent on:"),
-                    h4("- Catalogue of Somatic Mutations in Cancer (COSMIC), v2 and v3"),
+                    h4("- Catalogue of Somatic Mutations in Cancer (COSMIC), v2 and v3 (latest, May 2019)"),
                     h4("- pmsignature developed by Shiraishi et al."),
                     br(),
                     actionButton("about1",
