@@ -646,14 +646,14 @@ ui <- dashboardPage(
                 
               fluidRow(
                 box(width = 4, height = "280px",
-                    title = "COSMIC signature", 
+                    title = "COSMIC v2 signature", 
                     status = "primary", solidHeader = TRUE,
                     style="font-size:130%",
                     dataTableOutput("pm_table_v2")
                 ),
                 
                 box(width = 4, height = "280px",
-                    title = "COSMIC signature", 
+                    title = "COSMIC v3 signature", 
                     status = "info", solidHeader = TRUE,
                     style="font-size:130%",
                     dataTableOutput("pm_table_v3")
