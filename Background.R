@@ -4,6 +4,8 @@ library(purrr)
 library(magrittr)
 library(ggplot2)
 library(corrplot)
+source('functions/extraFunctions.R')
+
 
 if ((Sys.Date() - as.Date(file.info("data/COSMIC_sig.rdata", extra_cols = TRUE)$mtime) )>30){
   download.file("https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt",

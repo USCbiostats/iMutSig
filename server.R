@@ -731,8 +731,8 @@ server <- function(input, output) {
   # table with v2
   output$pm_table_v2 <- renderDataTable({
     table <- cbind(
-      `COSMIC signature` = paste0("C", 1:length(corr_vec_v3())),
-      `Cosine Similarity` = round(corr_vec_v3(), 3)
+      `COSMIC signature` = paste0("C", 1:length(corr_vec_v2())),
+      `Cosine Similarity` = round(corr_vec_v2(), 3)
     )
     table <- table[order(table[, 2], decreasing = TRUE), ]
     rownames(table) <- NULL

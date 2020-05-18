@@ -4,12 +4,11 @@ library(rvest)
 library(DT)
 library(shinythemes)
 library(shinyjs)
+library(shinydashboard)
 
 
-source('functions/extraFunctions.R')
 source("Background.R")
 
-library(shinydashboard)
 
 ui <- dashboardPage(
   
