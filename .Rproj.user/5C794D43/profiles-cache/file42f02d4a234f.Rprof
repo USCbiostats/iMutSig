@@ -1,9 +1,0 @@
-memory profiling: GC profiling: line profiling: sample.interval=10000
-:984341:1545641:71424528:0:"hook" "Rprof" "profvis::profvis" 
-#File 1: <expr>
-:984506:1545844:71479520:23:"file" "read.table" "read.csv" "eval" "eval" "%>%" 1#1 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 
-:984553:1545869:71487920:5:".External" "read.table" "read.csv" "eval" "eval" "%>%" 1#1 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 
-:987431:1586371:72043552:219:"file" "read.table" "read.csv" "eval" "eval" "%>%" 1#5 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 
-:987431:1586371:72043608:0:"file" "read.table" "read.csv" "eval" "eval" "%>%" 1#5 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 
-:987431:1586371:72043608:0:"file" "read.table" "read.csv" "eval" "eval" "%>%" 1#5 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 
-:988450:1633997:72260776:77:"pmatch" "match.arg" "type.convert.default" "type.convert" "read.table" "read.csv" "eval" "eval" "%>%" 1#5 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 
