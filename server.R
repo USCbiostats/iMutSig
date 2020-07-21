@@ -358,7 +358,7 @@ server <- function(input, output) {
   # the most similar signature
   output$selected_sig_text_2_v2_1 <- renderText({
     HTML(paste(
-      "<b>Type:</b> COSIMIC signature ", paste0("C", rank1_v2()), "</br>",
+      "<b>Type:</b> COSMIC signature ", paste0("C", rank1_v2()), "</br>",
       "<b>Similarity(highest):</b> ", corr_mat_v2[index2_v2(), rank1_v2()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
       paste(names(which(cosmic_corr_v2[rank1_v2(), ] == 1)), collapse = ", ")
@@ -371,7 +371,7 @@ server <- function(input, output) {
 
   output$selected_sig_text_2_v2_2 <- renderText({
     HTML(paste(
-      "<b>Type:</b> COSIMIC signature ", paste0("C", indexS2_v2()), "</br>",
+      "<b>Type:</b> COSMIC signature ", paste0("C", indexS2_v2()), "</br>",
       "<b>Similarity(selected):</b> ", corr_mat_v2[index2_v2(), indexS2_v2()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
       paste(names(which(cosmic_corr_v2[indexS2_v2(), ] == 1)), collapse = ", ")
@@ -478,7 +478,7 @@ server <- function(input, output) {
   # the most similar signature
   output$selected_sig_text_2_v3_1 <- renderText({
     HTML(paste(
-      "<b>Type:</b> COSIMIC signature ", paste0(rank1_v3()), "</br>",
+      "<b>Type:</b> COSMIC signature ", paste0(rank1_v3()), "</br>",
       "<b>Similarity(highest):</b> ", corr_mat_v3[index2_v3(), rank1_v3()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
       paste(names(which(cosmic_corr_v3[rank1_v3(), ] > 0)), collapse = ", ")
@@ -491,7 +491,7 @@ server <- function(input, output) {
   
   output$selected_sig_text_2_v3_2 <- renderText({
     HTML(paste(
-      "<b>Type:</b> COSIMIC signature ", paste0(indexS2_v3()), "</br>",
+      "<b>Type:</b> COSMIC signature ", paste0(indexS2_v3()), "</br>",
       "<b>Similarity(selected):</b> ", corr_mat_v3[index2_v3(), indexS2_v3()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
       paste(names(which(cosmic_corr_v3[indexS2_v3(), ] > 0)), collapse = ", ")
