@@ -5,3 +5,5 @@
 desktop.ini
 deployment.R
 iMutSig.Rproj
+.DS_Store
+rsconnect/
