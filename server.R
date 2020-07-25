@@ -4,7 +4,7 @@ server <- function(input, output) {
   
   output$menu <- renderMenu({4
     sidebarMenu(
-      menuItem(paste("All data were most recently updated on:",as.Date(file.info("data/COSMIC_sig.rdata")$mtime)), 
+      menuItem(paste("All data were most recently updated on the release of COSMIC v3.1."), 
                icon = icon("calendar"))
     )
   })
