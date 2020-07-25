@@ -10,33 +10,33 @@ source('functions/extraFunctions.R')
 Update <- FALSE
 if (Update){
   download.file("https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt",
-                "data/sig_v2.txt", mode = 'wb')
-  sig_file_v2 <- read.delim("data/sig_v2.txt") 
+                "inst/extdata/sig_v2.txt", mode = 'wb')
+  sig_file_v2 <- read.delim("inst/extdata/sig_v2.txt") 
   sig_full_v2 <- sig_file_v2[order(sig_file_v2[,1]),1:33]
   
   download.file("https://cancer.sanger.ac.uk/signatures/COSMIC_Mutational_Signatures_v3.1.xlsx",
-                "data/sig_v3.1.xlsx", mode = 'wb')
-  sig_file_v3 <- readxl::read_excel("data/sig_v3.1.xlsx") 
+                "inst/extdata/sig_v3.1.xlsx", mode = 'wb')
+  sig_file_v3 <- readxl::read_excel("inst/extdata/sig_v3.1.xlsx") 
   sig_full_v3 <- sig_file_v3[order(sig_file_v3[,1]),]
   sig_full_v3 <- data.frame(sig_full_v3)
   
-  save(sig_full_v2, sig_full_v3, file="data/COSMIC_sig.rdata")
+  save(sig_full_v2, sig_full_v3, file="inst/extdata/COSMIC_sig.rdata")
 }
 
-load("data/Signaturelog.RData")
-load("data/COSMIC_sig.rdata")
+load("inst/extdata/Signaturelog.RData")
+load("inst/extdata/COSMIC_sig.rdata")
 
-pm_corr <- read.csv("data/pm_corr.csv", na = "0") %>% as.matrix()
+pm_corr <- read.csv("inst/extdata/pm_corr.csv", na = "0") %>% as.matrix()
 pm_corr[is.na(pm_corr)] <- 0
 rownames(pm_corr) <- paste0("P", 1:27)
 
 # page 1, v2
-cosmic_corr_v2 <- read.csv("data/cosmic_corr.csv", na = "0") %>% as.matrix()
+cosmic_corr_v2 <- read.csv("inst/extdata/cosmic_corr.csv", na = "0") %>% as.matrix()
 cosmic_corr_v2[is.na(cosmic_corr_v2)] <- 0
 rownames(cosmic_corr_v2) <- c(paste0("C", 1:30), "Other")
 
 # page 1, v3
-cosmic_corr_v3_raw <- read.csv("data/PCAWG_sigProfiler_SBS_signatures_in_samples.csv", header = TRUE)
+cosmic_corr_v3_raw <- read.csv("inst/extdata/PCAWG_sigProfiler_SBS_signatures_in_samples.csv", header = TRUE)
 cosmic_corr_v3 <- sapply(unique(cosmic_corr_v3_raw$Cancer.Types), function(x){
   cosmic_corr_v3_raw %>% filter(Cancer.Types==x) %>% select(-c(1:3)) %>% sapply(., function(y) mean(y!=0))
 })
