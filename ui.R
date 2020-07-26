@@ -60,6 +60,23 @@ ui <- dashboardPage(
         tabItem(tabName = "page1-v2",
                 # 1st row 
                 fluidRow(
+                  valueBox(width = 3, color = "black",
+                           "Start choosing", "a COSMIC v2 signature"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_F_v2", label="COSMIC",
+                                  choices = paste0("C",1:30),
+                                  selected = 1) #N_F_v2
+                  ),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "method", label="Method",
+                                  choices = c("Expand", "Collapse"),
+                                  selected = "Expand")
+                  )
+                ),
+                
+                fluidRow(
                   box(
                     width = 5, 
                     title = paste("Chosen a COSMIC v2 signature"),
@@ -86,13 +103,13 @@ ui <- dashboardPage(
                 ),
                 
                 fluidRow(
-                  valueBox(width = 2, color = "black",
-                           "Choose", "a COSMIC v2 signature"),
+                  valueBox(width = 2, color = "yellow",
+                           "Choose", "a 2nd COSMIC v2 signature"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_F_v2", label="COSMIC",
-                                  choices = paste0("C",1:30),
-                                  selected = 1) #N_F_v2
+                      selectInput(inputId = "N_S_D_v2", label="2nd pmsignature",
+                                  choices = paste0("P",1:27),
+                                  selected = 3) #N_S_D_v2
                   ),
                   
                   valueBoxOutput(width = 2,
@@ -102,13 +119,7 @@ ui <- dashboardPage(
                                  "highest_v2"),
                   
                   valueBoxOutput(width = 2,
-                                 "selected1_v2_2"),
-                  
-                  box(width = 2, height = "100px",
-                      selectInput(inputId = "N_S_D_v2", label="pmsignature",
-                                  choices = paste0("P",1:27),
-                                  selected = 3) #N_S_D_v2
-                  )
+                                 "selected1_v2_2")
                 ),
                 
                 # 3nd row 
@@ -171,6 +182,23 @@ ui <- dashboardPage(
         ),
 
         tabItem(tabName = "page1-v3",
+                fluidRow(
+                  valueBox(width = 3, color = "black",
+                           "Start choosing", "a COSMIC v3.1 signature"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_F_v3", label="COSMIC",
+                                  choices = colnames(corr_mat_v3),
+                                  selected = 1) #N_F_v3
+                  ),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "method", label="Method",
+                                  choices = c("Expand", "Collapse"),
+                                  selected = "Expand")
+                  )
+                  
+                ),
                 # 1st row 
                 fluidRow(
                   box(
@@ -199,13 +227,13 @@ ui <- dashboardPage(
                 ),
                 
                 fluidRow(
-                  valueBox(width = 2, color = "black",
-                           "Choose", "a COSMIC v3.1 signature"),
+                  valueBox(width = 2, color = "yellow",
+                           "Choose", "a 2nd COSMIC v3.1 signature"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_F_v3", label="COSMIC",
-                                  choices = colnames(corr_mat_v3),
-                                  selected = 1) #N_F_v3
+                      selectInput(inputId = "N_S_D_v3", label="pmsignature",
+                                  choices = paste0("P",1:27),
+                                  selected = 3) #N_S_D_v3
                   ),
                   
                   valueBoxOutput(width = 2,
@@ -215,13 +243,8 @@ ui <- dashboardPage(
                                  "highest_v3"),
                   
                   valueBoxOutput(width = 2,
-                                 "selected1_v3_2"),
-                  
-                  box(width = 2, height = "100px",
-                      selectInput(inputId = "N_S_D_v3", label="pmsignature",
-                                  choices = paste0("P",1:27),
-                                  selected = 3) #N_S_D_v3
-                  )
+                                 "selected1_v3_2")
+                
                 ),
                 
                 # 3nd row 
@@ -284,6 +307,25 @@ ui <- dashboardPage(
         ),
 
         tabItem(tabName = "page2-v2",
+                fluidRow(
+                  valueBox(width = 2, color = "black",
+                           "Start choosing", "a pmsignature"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_D_v2", label="pmsignature",
+                                  choices = paste0("P",1:27),
+                                  selected = 1)
+                      
+                  ),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "method", label="Method",
+                                  choices = c("Expand", "Collapse"),
+                                  selected = "Expand")
+                  )
+                  
+                ),
+                
                 # First tab content
                 fluidRow(
                   box(
@@ -316,15 +358,13 @@ ui <- dashboardPage(
                 # 3rd Row
                 
                 fluidRow(
-                  valueBox(width = 2, color = "black",
-                           "Choose", "a pmsignature"),
+                  valueBox(width = 2, color = "yellow",
+                           "Choose", "a 2nd pmsignature"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_D_v2", label="pmsignature",
-                                  choices = paste0("P",1:27),
-                                  selected = 1)
-                      
-                  ),
+                      selectInput(inputId = "N_D_S_v2", label="COSMIC",
+                                  choices = paste0("C",1:30),
+                                  selected = 3)),
                   
                   valueBoxOutput(width = 2,
                                  "selected2_v2_1"),
@@ -333,13 +373,8 @@ ui <- dashboardPage(
                                  "highest2_v2"),
                   
                   valueBoxOutput(width = 2,
-                                 "selected2_v2_2"),
-                  
-                  box(width = 2, height = "100px",
-                      selectInput(inputId = "N_D_S_v2", label="COSMIC",
-                                  choices = paste0("C",1:30),
-                                  selected = 3)
-                  )
+                                 "selected2_v2_2")
+
                 ),
               
                 fluidRow(
@@ -401,6 +436,24 @@ ui <- dashboardPage(
               ),
         
         tabItem(tabName = "page2-v3",
+                fluidRow(
+                  valueBox(width = 2, color = "black",
+                           "Start choosing", "a pmsignature"),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "N_D_v3", label="pmsignature",
+                                  choices = paste0("P",1:27),
+                                  selected = 1)
+                      
+                  ),
+                  
+                  box(width = 2, height = "100px",
+                      selectInput(inputId = "method", label="Method",
+                                  choices = c("Expand", "Collapse"),
+                                  selected = "Expand")
+                  )
+                ),
+                
                 # First tab content
                 fluidRow(
                   box(
@@ -433,16 +486,14 @@ ui <- dashboardPage(
                 # 3rd Row
                 
                 fluidRow(
-                  valueBox(width = 2, color = "black",
-                           "Choose", "a pmsignature"),
+                  valueBox(width = 2, color = "yellow",
+                           "Choose", "a 2nd pmsignature"),
                   
                   box(width = 2, height = "100px",
-                      selectInput(inputId = "N_D_v3", label="pmsignature",
-                                  choices = paste0("P",1:27),
-                                  selected = 1)
+                      selectInput(inputId = "N_D_S_v3", label="COSMIC",
+                                  choices = colnames(corr_mat_v3),
+                                  selected = 3),
                       
-                  ),
-                  
                   valueBoxOutput(width = 2,
                                  "selected2_v3_1"),
                   
@@ -450,12 +501,7 @@ ui <- dashboardPage(
                                  "highest2_v3"),
                   
                   valueBoxOutput(width = 2,
-                                 "selected2_v3_2"),
-                  
-                  box(width = 2, height = "100px",
-                      selectInput(inputId = "N_D_S_v3", label="COSMIC",
-                                  choices = colnames(corr_mat_v3),
-                                  selected = 3)
+                                 "selected2_v3_2")
                   )
                 ),
                 
