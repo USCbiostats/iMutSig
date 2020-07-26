@@ -7,6 +7,7 @@ library(corrplot)
 library(stringr)
 library(pmsignature)
 library(d3heatmap)
+library(decompTumor2Sig)
 
 source("Background.R")
 
@@ -65,12 +66,12 @@ ui <- dashboardPage(
                   
                   box(width = 2, height = "102px",
                       selectInput(inputId = "N_F_v3", label="COSMIC",
-                                  choices = colnames(corr_mat_v3),
+                                  choices = colnames(sig_full_v3)[-c(1,2)],
                                   selected = 1) #N_F_v3
                   ),
                   
                   box(width = 2, height = "102px",
-                      selectInput(inputId = "method", label="Method",
+                      selectInput(inputId = "method_1_v3", label="Method",
                                   choices = c("Expand", "Collapse"),
                                   selected = "Expand")
                   )
@@ -195,7 +196,7 @@ ui <- dashboardPage(
                   ),
                   
                   box(width = 2, height = "102px",
-                      selectInput(inputId = "method", label="Method",
+                      selectInput(inputId = "method_1_v2", label="Method",
                                   choices = c("Expand", "Collapse"),
                                   selected = "Expand")
                   )
@@ -319,7 +320,7 @@ ui <- dashboardPage(
                   ),
                   
                   box(width = 2, height = "102px",
-                      selectInput(inputId = "method", label="Method",
+                      selectInput(inputId = "method_2_v3", label="Method",
                                   choices = c("Expand", "Collapse"),
                                   selected = "Expand")
                   )
@@ -362,18 +363,17 @@ ui <- dashboardPage(
                   
                   box(width = 2, height = "102px",
                       selectInput(inputId = "N_D_S_v3", label="COSMIC",
-                                  choices = colnames(corr_mat_v3),
-                                  selected = 3),
+                                  choices = colnames(sig_full_v3)[-c(1,2)],
+                                  selected = 3)),
                       
-                      valueBoxOutput(width = 2,
-                                     "selected2_v3_1"),
-                      
-                      valueBoxOutput(width = 2,
-                                     "highest2_v3"),
-                      
-                      valueBoxOutput(width = 2,
-                                     "selected2_v3_2")
-                  )
+                  valueBoxOutput(width = 2,
+                                 "selected2_v3_1"),
+                  
+                  valueBoxOutput(width = 2,
+                                 "highest2_v3"),
+                  
+                  valueBoxOutput(width = 2,
+                                 "selected2_v3_2")
                 ),
                 
                 fluidRow(
@@ -447,7 +447,7 @@ ui <- dashboardPage(
                   ),
                   
                   box(width = 2, height = "102px",
-                      selectInput(inputId = "method", label="Method",
+                      selectInput(inputId = "method_2_v2", label="Method",
                                   choices = c("Expand", "Collapse"),
                                   selected = "Expand")
                   )
@@ -766,13 +766,22 @@ ui <- dashboardPage(
             ),
         
         tabItem(tabName = "page5",
-                box(width = 2, height = "102px",
-                    selectInput(inputId = "heatmap", label="COSMIC version",
-                                choices = c("v2", "v3.1"),
-                                selected = "v2")
+                fluidRow(
+                  box(width = 2, height = "102px",
+                      selectInput(inputId = "heatmap", label="COSMIC version",
+                                  choices = c("v2", "v3.1"),
+                                  selected = "v2")
+                  ),
+                  box(width = 2, height = "102px",
+                      selectInput(inputId = "method_5", label="Method",
+                                  choices = c("Expand", "Collapse"),
+                                  selected = "Expand")
+                  )
                 ),
-                box(width = 10,
-                  uiOutput("heatmap_dynamic")
+                fluidRow(
+                  box(width = 12,
+                      uiOutput("heatmap_dynamic")
+                  )
                 )
             ),
         
