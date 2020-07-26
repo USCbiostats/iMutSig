@@ -34,7 +34,11 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
 devtools::install_github("friend1ws/pmsignature", ref = "devel")
 ```
 
-By click the `Run App` button in either `ui.R` or `server.R`, you can start using the Shiny app locally. 
+By clicking the `Run App` button in either `ui.R` or `server.R` script, a Shiny app will run locally. Or you can simply enter `runApp()` in the console. 
+
+## Report issues
+
+Please open an issue at https://github.com/USCbiostats/iMutSig/issues if you run into any issues or would like to add a new feature. Thank you!
 
 ## Funding
 This work was supported by NCI grant numbers 5P30 CA014089 and P01 CA196569.
