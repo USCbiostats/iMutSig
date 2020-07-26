@@ -11,7 +11,7 @@ Yang Z, Pandey P, Marjoram P and Siegmund KD. iMutSig: a web application to iden
 
 ## How to use the Shiny app
 ### Website
-This Shiny app is hosted at Shinyapp.io where you can access using the link zhiyang.shinyapps.io/imutsig/. 
+This Shiny app is hosted at shinyapps.io where you can access using the link zhiyang.shinyapps.io/imutsig/. 
 
 ## Local installation
 If you'd like to use this Shiny app locally, please type the following command in your RStudio. 
