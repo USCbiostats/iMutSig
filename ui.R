@@ -24,11 +24,11 @@ ui <- dashboardPage(
       sidebarMenu(
       id="mysidebar",
       menuItem("COSMIC to pmsignature", icon = icon("chart-bar"), startExpanded = TRUE,
-               menuSubItem('v3 (latest)', tabName = "page1-v3"),
+               menuSubItem('v3.1 (latest)', tabName = "page1-v3"),
                menuSubItem('v2', tabName = 'page1-v2')
                ),
       menuItem("pmsignature to COSMIC", icon = icon("cube"), startExpanded = TRUE,
-               menuSubItem('v3 (latest)', tabName = "page2-v3"),
+               menuSubItem('v3.1 (latest)', tabName = "page2-v3"),
                menuSubItem('v2', tabName = 'page2-v2')
                ),
       menuItem("Input a signature", icon = icon("sign-in-alt"),  startExpanded = TRUE,
@@ -175,7 +175,7 @@ ui <- dashboardPage(
                 fluidRow(
                   box(
                     width = 5, 
-                    title = paste("Chosen a COSMIC v3 signature"),
+                    title = paste("Chosen a COSMIC v3.1 signature"),
                     plotOutput("selected_sig_1_v3", height = 200)
                   ),
                   
@@ -200,7 +200,7 @@ ui <- dashboardPage(
                 
                 fluidRow(
                   valueBox(width = 2, color = "black",
-                           "Choose", "a COSMIC v3 signature"),
+                           "Choose", "a COSMIC v3.1 signature"),
                   
                   box(width = 2, height = "100px",
                       selectInput(inputId = "N_F_v3", label="COSMIC",
@@ -552,7 +552,7 @@ ui <- dashboardPage(
                   
                   column(width = 4, 
                          box(width = NULL, height = "280px",
-                             title = "COSMIC v3 signature",
+                             title = "COSMIC v3.1 signature",
                              status = "info", solidHeader = TRUE,
                              style="font-size:130%",
                              dataTableOutput("fu_table_v3")
@@ -653,7 +653,7 @@ ui <- dashboardPage(
                 ),
                 
                 box(width = 4, height = "280px",
-                    title = "COSMIC v3 signature", 
+                    title = "COSMIC v3.1 signature", 
                     status = "info", solidHeader = TRUE,
                     style="font-size:130%",
                     dataTableOutput("pm_table_v3")
@@ -707,7 +707,7 @@ ui <- dashboardPage(
                     uiOutput("selected_sig_text_pm_v2")
                 ),
                 
-                box(width = 4, title="Cancer membership in COSMIC v3", status = "info", 
+                box(width = 4, title="Cancer membership in COSMIC v3.1", status = "info", 
                     solidHeader = TRUE,
                     uiOutput("selected_sig_text_pm_v3")
                 ),
@@ -737,7 +737,7 @@ ui <- dashboardPage(
                                  label = "Download",
                                  icon = icon("download"),
                                  onclick = sprintf("window.open('%s')", "https://cancer.sanger.ac.uk/cancergenome/assets/signatures_probabilities.txt")),
-                    h4("- Catalogue of Somatic Mutations in Cancer, COSMIC v3, May 2019"),
+                    h4("- Catalogue of Somatic Mutations in Cancer, COSMIC v3.1, June 2020"),
                     actionButton("about4",
                                  label = "Paper",
                                  icon = icon("book"),
@@ -745,11 +745,11 @@ ui <- dashboardPage(
                     actionButton("about5",
                                  label = "View signatures",
                                  icon = icon("laptop"),
-                                 onclick = sprintf("window.open('%s')", "https://cancer.sanger.ac.uk/cosmic/signatures/SBS/")),
+                                 onclick = sprintf("window.open('%s')", "https://cancer.sanger.ac.uk/cosmic/signatures/SBS/index.tt")),
                     actionButton("about6",
                                  label = "Download",
                                  icon = icon("download"),
-                                 onclick = sprintf("window.open('%s')", "https://www.synapse.org/#!Synapse:syn12009743")),
+                                 onclick = sprintf("window.open('%s')", "https://cancer.sanger.ac.uk/signatures/COSMIC_Mutational_Signatures_v3.1.xlsx")),
                     
                     h4("- pmsignature developed by Shiraishi et al."),
                     actionButton("about7",
