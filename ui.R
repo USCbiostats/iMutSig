@@ -521,7 +521,7 @@ ui <- dashboardPage(
                 fluidRow( 
                   box(title = "About input:", status = "warning", solidHeader = TRUE,
                       width = 4, 
-                      "Please prepare a CSV file by putting your pmsignature into a column with no quotes.",
+                      "Please prepare a CSV file by putting your pmsignature into a matrix with no quotes.",
                       downloadButton('downloadData', label = "Download a sample CSV file", class = NULL),
                       br(), br(),
                       fileInput("file1", "Choose CSV File",
@@ -623,7 +623,7 @@ ui <- dashboardPage(
               fluidRow( 
                  box(title = "About input:", status = "warning", solidHeader = TRUE,
                    width = 4, 
-                   "Please prepare a CSV file by putting your pmsignature into a matrix with no quotes.",
+                   "Please prepare a CSV file by putting your COSMIC signatures into a column with no quotes.",
                    downloadButton('downloadData2', label = "Download a sample CSV file", class = NULL),
                    br(), br(),
                    fileInput("file2", "Choose CSV File",
