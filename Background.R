@@ -148,23 +148,49 @@ for(i in seq_along(missingSig)){
   rownames(cosmic_corr_v3)[nrow(cosmic_corr_v3)] <- missingSig[i]
 }
 
-# cosmic v2
-corr_mat_v2 <- matrix(NA, length(Fs), 30)
+### cosmic v2, expand
+corr_mat_v2_exp <- matrix(NA, length(Fs), 30)
 for(i in 1:length(Fs)){
   full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-  corr_mat_v2[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2[,x+3]))
+  corr_mat_v2_exp[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2[,x+3]))
 }
-rownames(corr_mat_v2) <- paste0("P", 1:length(Fs))
-colnames(corr_mat_v2) <- paste0("C", 1:30)
+rownames(corr_mat_v2_exp) <- paste0("P", 1:length(Fs))
+colnames(corr_mat_v2_exp) <- paste0("C", 1:30)
 
-# cosmic v3
-corr_mat_v3 <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
+### cosmic v2, collapse
+corr_mat_v2_col <- matrix(NA, length(Fs), 30)
 for(i in 1:length(Fs)){
   full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-  corr_mat_v3[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3[,x+2])))
+  sig_full_v2_col <- sapply(1:30, function(x) convertSignatureMatrixToVector(convertAlexandrov2Shiraishi(sig_full_v2[, x+3])[[1]], c(6,4,4)))
+  corr_mat_v2_col[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2_col[,x]))
 }
-rownames(corr_mat_v3) <- paste0("P", 1:length(Fs))
-colnames(corr_mat_v3) <- colnames(sig_full_v3)[-c(1:2)]
+rownames(corr_mat_v2_col) <- paste0("P", 1:length(Fs))
+colnames(corr_mat_v2_col) <- paste0("C", 1:30)
+
+corr_mat_v2 <- list("Expand" = corr_mat_v2_exp,
+                    "Collapse" = corr_mat_v2_col)
+
+### cosmic v3, expand
+corr_mat_v3_exp <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
+for(i in 1:length(Fs)){
+  full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
+  corr_mat_v3_exp[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3[,x+2])))
+}
+rownames(corr_mat_v3_exp) <- paste0("P", 1:length(Fs))
+colnames(corr_mat_v3_exp) <- colnames(sig_full_v3)[-c(1:2)]
+
+### cosmic v3, collapse
+corr_mat_v3_col <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
+for(i in 1:length(Fs)){
+  full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
+  sig_full_v3_col <- sapply(1:(ncol(sig_full_v3)-2), function(x) convertSignatureMatrixToVector(convertAlexandrov2Shiraishi(sig_full_v3[, x+2])[[1]], c(6,4,4)))
+  corr_mat_v3_col[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3_col[,x])))
+}
+rownames(corr_mat_v3_col) <- paste0("P", 1:length(Fs))
+colnames(corr_mat_v3_col) <- colnames(sig_full_v3)[-c(1:2)]
+
+corr_mat_v3 <- list("Expand" = corr_mat_v3_exp,
+                    "Collapse" = corr_mat_v3_col)
 
 myCol <- colorRampPalette(c("#F8F8FF", "#F8F8FF", "#F8F8FF", "#6B8E23"))
 
