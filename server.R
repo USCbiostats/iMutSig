@@ -413,7 +413,7 @@ server <- function(input, output) {
   output$mytable2_v3 <- renderDataTable({
     table <- cbind(
       `pmsignature` = paste0("P", index2_v3()),
-      `COSMIC v3 Signature` = colnames(corr_mat_v3),
+      `COSMIC v3.1 Signature` = colnames(corr_mat_v3),
       `Similarity` = round(corr_mat_v3[index2_v3(), ], 3)
     )
     rownames(table) <- NULL
