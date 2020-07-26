@@ -4,6 +4,8 @@
 [![](https://img.shields.io/badge/doi-10.12688/f1000research.24435-yellow.svg)](https://doi.org/10.12688/f1000research.24435.1)
 
 
+![](https://f1000researchdata.s3.amazonaws.com/manuscripts/26954/c9347314-4bd6-4497-a9ff-219373b2409c_figure1.gif)
+
 ## Paper
 You can download the paper at [*F1000Research*](https://doi.org/10.12688/f1000research.24435.1) and cite the paper:
 
@@ -32,7 +34,8 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
 devtools::install_github("friend1ws/pmsignature", ref = "devel")
 ```
 
+By click the `Run App` button in either `ui.R` or `server.R`, you can start using the Shiny app locally. 
+
 ## Funding
 This work was supported by NCI grant numbers 5P30 CA014089 and P01 CA196569.
 
-By click the `Run App` button in either `ui.R` or `server.R`, you can start using the Shiny app locally. 
