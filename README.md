@@ -20,3 +20,15 @@ If you'd like to use this Shiny app locally, please type the following command i
 git clone https://github.com/USCbiostats/iMutSig.git
 ```
 
+To run the Shiny app, you need to install the following packages. 
+
+```
+packages <- c("shinyjs", "shinydashboard", "shiny", "dplyr", "DT", "corrplot", "stringr", "devtools")
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+  install.packages(setdiff(packages, rownames(installed.packages())))  
+}
+
+devtools::install_github("friend1ws/pmsignature", ref = "devel")
+```
+
+By click the `Run App` button in either `ui.R` or `server.R`, you can start using the Shiny app locally. 
