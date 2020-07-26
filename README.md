@@ -1,6 +1,6 @@
 # iMutSig: a web application to identify the most similar mutational signature using shiny
 
-[![](https://img.shields.io/badge/release%20version-0.1.0-green.svg)] 
+![](https://img.shields.io/badge/release%20version-0.1.0-green.svg)
 [![](https://img.shields.io/badge/doi-10.12688/f1000research.24435-yellow.svg)](https://doi.org/10.12688/f1000research.24435.1)
 
 
