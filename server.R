@@ -872,10 +872,28 @@ server <- function(input, output) {
     contentType = "text/csv"
   )
   
+  version <- reactive({
+    as.character(input$heatmap)
+  })
+  
+  output$heatmap_v <- renderD3heatmap({
+    if(version() == "v2"){
+      corr_mat <- corr_mat_v2
+    } else {
+      corr_mat <- corr_mat_v3
+    }
+    d3heatmap(
+      corr_mat,
+      colors = "Blues",
+      Rowv = NA, Colv = NA
+    )
+  })
+  
+  output$heatmap_dynamic <- renderUI({
+    width <- ifelse(version()=="v2", "600px", "1100px")
+    d3heatmapOutput("heatmap_v", width = width,
+                    height = "500px")
+  })
   
 }
 
-# Double check the title again
-# plot bottom is not reactive
-# implement importing csv file (R users and non-R users)
-# color blind for the pmsignature
