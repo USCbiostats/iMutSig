@@ -1,10 +1,11 @@
-library(shiny)
-library(dplyr)
-library(rvest)
-library(DT)
-library(shinythemes)
 library(shinyjs)
 library(shinydashboard)
+library(shiny)
+library(dplyr)
+library(DT)
+library(corrplot)
+library(stringr)
+library(pmsignature)
 
 
 source("Background.R")
