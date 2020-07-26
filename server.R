@@ -857,7 +857,7 @@ server <- function(input, output) {
       "cosmic_signature_sample.csv"
     },
     content = function(file) {
-      file.copy("samples/cosmic_signature_sample.csv", file)
+      file.copy("data/cosmic_signature_sample.csv", file)
     },
     contentType = "text/csv"
   )
@@ -867,7 +867,7 @@ server <- function(input, output) {
       "pmsignature_sample.csv"
     },
     content = function(file) {
-      file.copy("samples/pmsignature_sample.csv", file)
+      file.copy("data/pmsignature_sample.csv", file)
     },
     contentType = "text/csv"
   )
