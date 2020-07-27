@@ -156,9 +156,8 @@ if (Update){
   ### cosmic v2, collapse
   corr_mat_v2_col <- matrix(NA, length(Fs), 30)
   for(i in 1:length(Fs)){
-    full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-    sig_full_v2_col <- sapply(1:30, function(x) convertSignatureMatrixToVector(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, x+3])[[1]], c(6,4,4)))
-    corr_mat_v2_col[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2_col[,x]))
+    sig_full_v2_col <- lapply(1:30, function(x) decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, x+3])[[1]])
+    corr_mat_v2_col[i,] <- sapply(1:30, function(x) getCosDistance(c(Fs[[i]][c(1,3,4),]), c(sig_full_v2_col[[x]])))
   }
   rownames(corr_mat_v2_col) <- paste0("P", 1:length(Fs))
   colnames(corr_mat_v2_col) <- paste0("C", 1:30)
@@ -178,9 +177,8 @@ if (Update){
   ### cosmic v3, collapse
   corr_mat_v3_col <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
   for(i in 1:length(Fs)){
-    full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-    sig_full_v3_col <- sapply(1:(ncol(sig_full_v3)-2), function(x) convertSignatureMatrixToVector(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, x+2])[[1]], c(6,4,4)))
-    corr_mat_v3_col[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3_col[,x])))
+    sig_full_v3_col <- lapply(1:(ncol(sig_full_v3)-2), function(x) decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, x+2])[[1]])
+    corr_mat_v3_col[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(c(Fs[[i]][c(1,3,4),]), c(sig_full_v3_col[[x]])))
   }
   rownames(corr_mat_v3_col) <- paste0("P", 1:length(Fs))
   colnames(corr_mat_v3_col) <- colnames(sig_full_v3)[-c(1:2)]
