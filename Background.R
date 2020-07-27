@@ -179,7 +179,8 @@ if (Update){
   corr_mat_v3_col <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
   for(i in 1:length(Fs)){
     sig_full_v3_col <- lapply(1:(ncol(sig_full_v3)-2), function(x) decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, x+2])[[1]])
-    corr_mat_v3_col[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(c(Fs[[i]][c(1,3,4),]), c(sig_full_v3_col[[x]])))
+    corr_mat_v3_col[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(c(Fs[[i]][c(1,3,4),])[-c(14,15,17,18)], 
+                                                                                      c(sig_full_v3_col[[x]])[-c(14,15,17,18)]))
   }
   rownames(corr_mat_v3_col) <- paste0("P", 1:length(Fs))
   colnames(corr_mat_v3_col) <- colnames(sig_full_v3)[-c(1:2)]
