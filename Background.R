@@ -2,7 +2,7 @@
 ## Define functions 
 ###################
 
-visPMS_full_modified <- function(Fvec, numBases, trDir) {
+visPMS_full_modified <- function(Fvec, numBases) {
   
   flankingPatternNum <- 4^(numBases - 1)
   subPattern <- c(rep("C>A", flankingPatternNum), 
@@ -15,16 +15,8 @@ visPMS_full_modified <- function(Fvec, numBases, trDir) {
   
   X <- data.frame(probability = Fvec)
   # X$strand <- factor(rep(c("plus", "minus"), 1536), levels=c("plus", "minus"))
-  
-  if (trDir == TRUE) {
-    X$strand <- factor(c(rep("plus", flankingPatternNum * 6), rep("minus", flankingPatternNum * 6)), levels=c("plus", "minus"))
-    X$subtype <- factor(rep(subPattern, 2), levels=c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G"))
-    X$flank <- paste0(rep(c("A", "C", "G", "T"), each=4), rep("."), rep(c("A", "C", "G", "T"), 4))
-  } else {
-    X$subtype <- factor(subPattern, levels=c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G"))
-    X$flank <- paste0(rep(c("A", "C", "G", "T"), each=4), rep("."), rep(c("A", "C", "G", "T"), 4))
-  }
-  
+  X$subtype <- factor(subPattern, levels=c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G"))
+  X$flank <- paste0(rep(c("A", "C", "G", "T"), each=4), rep("."), rep(c("A", "C", "G", "T"), 4))
   
   gp <- ggplot(X, aes(x=flank, y=probability, fill=subtype)) +
     geom_bar(stat="identity", position="identity") + 
@@ -40,12 +32,7 @@ visPMS_full_modified <- function(Fvec, numBases, trDir) {
           strip.text= element_text(face="bold", size=rel(1.2))) +
     guides(fill=FALSE) 
   
-  
-  if (trDir == TRUE) {
-    gp <- gp + facet_grid(strand ~ subtype)
-  } else {
-    gp <- gp + facet_grid(. ~ subtype)
-  }
+  gp <- gp + facet_grid(. ~ subtype)
   
   gp
   
