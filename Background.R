@@ -54,7 +54,7 @@ visPMS_full_modified <- function(Fvec, numBases, trDir) {
 
 convertSignatureMatrixToVector<- function(Fmat,fdim) {
   
-  if(nrow(Fmat)<length(fdim) | (nrow(Fmat)==5 & length(fdim)==4)){ 
+  if(nrow(Fmat)<length(fdim)){ 
     stop("The signature matrix does not have enough information!")
   } else if(nrow(Fmat)>4 & length(fdim)==3){
     index <- c(1,3,4)
@@ -122,75 +122,78 @@ if (Update){
   sig_full_v3 <- data.frame(sig_full_v3)
   
   save(sig_full_v2, sig_full_v3, file="inst/extdata/COSMIC_sig.rdata")
+  
+  pm_corr <- read.csv("inst/extdata/pm_corr.csv", na = "0") %>% as.matrix()
+  pm_corr[is.na(pm_corr)] <- 0
+  rownames(pm_corr) <- paste0("P", 1:27)
+  
+  # page 1, v2
+  cosmic_corr_v2 <- read.csv("inst/extdata/cosmic_corr.csv", na = "0") %>% as.matrix()
+  cosmic_corr_v2[is.na(cosmic_corr_v2)] <- 0
+  rownames(cosmic_corr_v2) <- c(paste0("C", 1:30), "Other")
+  
+  # page 1, v3
+  cosmic_corr_v3_raw <- read.csv("inst/extdata/PCAWG_sigProfiler_SBS_signatures_in_samples.csv", header = TRUE)
+  cosmic_corr_v3 <- sapply(unique(cosmic_corr_v3_raw$Cancer.Types), function(x){
+    cosmic_corr_v3_raw %>% filter(Cancer.Types==x) %>% select(-c(1:3)) %>% sapply(., function(y) mean(y!=0))
+  })
+  colnames(cosmic_corr_v3) <- unique(cosmic_corr_v3_raw$Cancer.Types)
+  missingSig <- setdiff(colnames(sig_full_v3)[-c(1:2)], rownames(cosmic_corr_v3))
+  for(i in seq_along(missingSig)){
+    cosmic_corr_v3 <- rbind(cosmic_corr_v3, 0)
+    rownames(cosmic_corr_v3)[nrow(cosmic_corr_v3)] <- missingSig[i]
+  }
+  
+  ### cosmic v2, expand
+  corr_mat_v2_exp <- matrix(NA, length(Fs), 30)
+  for(i in 1:length(Fs)){
+    full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
+    corr_mat_v2_exp[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2[,x+3]))
+  }
+  rownames(corr_mat_v2_exp) <- paste0("P", 1:length(Fs))
+  colnames(corr_mat_v2_exp) <- paste0("C", 1:30)
+  
+  ### cosmic v2, collapse
+  corr_mat_v2_col <- matrix(NA, length(Fs), 30)
+  for(i in 1:length(Fs)){
+    full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
+    sig_full_v2_col <- sapply(1:30, function(x) convertSignatureMatrixToVector(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, x+3])[[1]], c(6,4,4)))
+    corr_mat_v2_col[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2_col[,x]))
+  }
+  rownames(corr_mat_v2_col) <- paste0("P", 1:length(Fs))
+  colnames(corr_mat_v2_col) <- paste0("C", 1:30)
+  
+  corr_mat_v2 <- list("Expand" = corr_mat_v2_exp,
+                      "Collapse" = corr_mat_v2_col)
+  
+  ### cosmic v3, expand
+  corr_mat_v3_exp <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
+  for(i in 1:length(Fs)){
+    full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
+    corr_mat_v3_exp[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3[,x+2])))
+  }
+  rownames(corr_mat_v3_exp) <- paste0("P", 1:length(Fs))
+  colnames(corr_mat_v3_exp) <- colnames(sig_full_v3)[-c(1:2)]
+  
+  ### cosmic v3, collapse
+  corr_mat_v3_col <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
+  for(i in 1:length(Fs)){
+    full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
+    sig_full_v3_col <- sapply(1:(ncol(sig_full_v3)-2), function(x) convertSignatureMatrixToVector(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, x+2])[[1]], c(6,4,4)))
+    corr_mat_v3_col[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3_col[,x])))
+  }
+  rownames(corr_mat_v3_col) <- paste0("P", 1:length(Fs))
+  colnames(corr_mat_v3_col) <- colnames(sig_full_v3)[-c(1:2)]
+  
+  corr_mat_v3 <- list("Expand" = corr_mat_v3_exp,
+                      "Collapse" = corr_mat_v3_col)
+  
+  save(corr_mat_v2, corr_mat_v3, pm_corr, cosmic_corr_v2, cosmic_corr_v3, file="inst/extdata/corr_mat.rdata")
 }
 
 load("inst/extdata/Signaturelog.RData")
 load("inst/extdata/COSMIC_sig.rdata")
-
-pm_corr <- read.csv("inst/extdata/pm_corr.csv", na = "0") %>% as.matrix()
-pm_corr[is.na(pm_corr)] <- 0
-rownames(pm_corr) <- paste0("P", 1:27)
-
-# page 1, v2
-cosmic_corr_v2 <- read.csv("inst/extdata/cosmic_corr.csv", na = "0") %>% as.matrix()
-cosmic_corr_v2[is.na(cosmic_corr_v2)] <- 0
-rownames(cosmic_corr_v2) <- c(paste0("C", 1:30), "Other")
-
-# page 1, v3
-cosmic_corr_v3_raw <- read.csv("inst/extdata/PCAWG_sigProfiler_SBS_signatures_in_samples.csv", header = TRUE)
-cosmic_corr_v3 <- sapply(unique(cosmic_corr_v3_raw$Cancer.Types), function(x){
-  cosmic_corr_v3_raw %>% filter(Cancer.Types==x) %>% select(-c(1:3)) %>% sapply(., function(y) mean(y!=0))
-})
-colnames(cosmic_corr_v3) <- unique(cosmic_corr_v3_raw$Cancer.Types)
-missingSig <- setdiff(colnames(sig_full_v3)[-c(1:2)], rownames(cosmic_corr_v3))
-for(i in seq_along(missingSig)){
-  cosmic_corr_v3 <- rbind(cosmic_corr_v3, 0)
-  rownames(cosmic_corr_v3)[nrow(cosmic_corr_v3)] <- missingSig[i]
-}
-
-### cosmic v2, expand
-corr_mat_v2_exp <- matrix(NA, length(Fs), 30)
-for(i in 1:length(Fs)){
-  full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-  corr_mat_v2_exp[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2[,x+3]))
-}
-rownames(corr_mat_v2_exp) <- paste0("P", 1:length(Fs))
-colnames(corr_mat_v2_exp) <- paste0("C", 1:30)
-
-### cosmic v2, collapse
-corr_mat_v2_col <- matrix(NA, length(Fs), 30)
-for(i in 1:length(Fs)){
-  full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-  sig_full_v2_col <- sapply(1:30, function(x) convertSignatureMatrixToVector(convertAlexandrov2Shiraishi(sig_full_v2[, x+3])[[1]], c(6,4,4)))
-  corr_mat_v2_col[i,] <- sapply(1:30, function(x) getCosDistance(full_sig,sig_full_v2_col[,x]))
-}
-rownames(corr_mat_v2_col) <- paste0("P", 1:length(Fs))
-colnames(corr_mat_v2_col) <- paste0("C", 1:30)
-
-corr_mat_v2 <- list("Expand" = corr_mat_v2_exp,
-                    "Collapse" = corr_mat_v2_col)
-
-### cosmic v3, expand
-corr_mat_v3_exp <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
-for(i in 1:length(Fs)){
-  full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-  corr_mat_v3_exp[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3[,x+2])))
-}
-rownames(corr_mat_v3_exp) <- paste0("P", 1:length(Fs))
-colnames(corr_mat_v3_exp) <- colnames(sig_full_v3)[-c(1:2)]
-
-### cosmic v3, collapse
-corr_mat_v3_col <- matrix(NA, length(Fs), ncol(sig_full_v3)-2)
-for(i in 1:length(Fs)){
-  full_sig <- convertSignatureMatrixToVector(Fs[[i]], c(6,4,4))
-  sig_full_v3_col <- sapply(1:(ncol(sig_full_v3)-2), function(x) convertSignatureMatrixToVector(convertAlexandrov2Shiraishi(sig_full_v3[, x+2])[[1]], c(6,4,4)))
-  corr_mat_v3_col[i,] <- sapply(1:(ncol(sig_full_v3)-2), function(x) getCosDistance(full_sig,unlist(sig_full_v3_col[,x])))
-}
-rownames(corr_mat_v3_col) <- paste0("P", 1:length(Fs))
-colnames(corr_mat_v3_col) <- colnames(sig_full_v3)[-c(1:2)]
-
-corr_mat_v3 <- list("Expand" = corr_mat_v3_exp,
-                    "Collapse" = corr_mat_v3_col)
+load("inst/extdata/corr_mat.rdata")
 
 myCol <- colorRampPalette(c("#F8F8FF", "#F8F8FF", "#F8F8FF", "#6B8E23"))
 
