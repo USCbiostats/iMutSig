@@ -910,7 +910,7 @@ server <- function(input, output) {
   
   output$heatmap_dynamic <- renderUI({
     width <- ifelse(version()=="v2", "600px", "1200px")
-    d3heatmapOutput("heatmap_v", width = width,
+    d3heatmap::d3heatmapOutput("heatmap_v", width = width,
                     height = "500px")
   })
   
