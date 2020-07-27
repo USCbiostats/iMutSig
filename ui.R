@@ -54,8 +54,6 @@ ui <- dashboardPage(
         
       '))),
 
-      useShinyjs(),
-      
       tabItems(
         tabItem(tabName = "page1-v3",
                 fluidRow(

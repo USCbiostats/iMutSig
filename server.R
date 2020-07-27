@@ -9,14 +9,6 @@ server <- function(input, output) {
     )
   })
   
-  
-  observeEvent(input$mysidebar, {
-    # for desktop browsers
-    addClass(selector = "body", class = "sidebar-collapse")
-    # for mobile browsers
-    removeClass(selector = "body", class = "sidebar-open")
-  })
-  
   ###########
   # Page 1-v3
   ###########
@@ -33,13 +25,13 @@ server <- function(input, output) {
   })
   
   output$selected_sig_1_v3 <- renderPlot({
-    visPMS_full_modified(sig_full_v3[, index_v3()], 3, FALSE)
+    visPMS_full_modified(sig_full_v3[, as.character(input$N_F_v3)], 3)
   })
   
   output$corrplot1_2_v3 <- renderPlot({
     corrplot(cosmic_corr_v3[index_v3(), , drop = FALSE],
              is.corr = FALSE, bg = "#F8F8FF",
-             col = myCol(200), tl.col = "black",
+             col = myCol(10), tl.col = "black",
              tl.cex = 0.8, cl.pos = "n", cl.lim = c(0, 1)
     )
   })
@@ -94,7 +86,7 @@ server <- function(input, output) {
 
   
   output$selected_sig_full_1_v3 <- renderPlot({
-    visPMS_full_modified(sig_full_v3[, index_v3()], 3, FALSE)
+    visPMS_full_modified(sig_full_v3[, index_v3()], 3)
   })
   
   
@@ -145,7 +137,7 @@ server <- function(input, output) {
   })
   
   output$selected_sig_pm_full_1_v3_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v3()]], c(6, 4, 4)), 3, FALSE)
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v3()]], c(6, 4, 4)), 3)
   })
   
   output$selected_sig_full_1_v3_2 <- renderPlot({
@@ -168,13 +160,13 @@ server <- function(input, output) {
   })
   
   output$selected_sig_1_v2 <- renderPlot({
-    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3, FALSE)
+    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3)
   })
   
   output$corrplot1_2_v2 <- renderPlot({
     corrplot(cosmic_corr_v2[index_v2(), , drop = FALSE],
              is.corr = FALSE, bg = "#F8F8FF",
-             col = myCol(200), tl.col = "black",
+             col = myCol(10), tl.col = "black",
              tl.cex = 0.9, cl.pos = "n", cl.lim = c(0, 1)
     )
   })
@@ -228,7 +220,7 @@ server <- function(input, output) {
   })
   
   output$selected_sig_full_1_v2 <- renderPlot({
-    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3, FALSE)
+    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3)
   })
   
   output$selected_sig_full_pm_1_v2 <- renderPlot({
@@ -251,7 +243,7 @@ server <- function(input, output) {
   
   output$selected_sig_pm_full_1_v2_1 <- renderPlot({
     rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v2())[index_v2(), ], decreasing = TRUE)[1:1])))
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3, FALSE)
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3)
   })
   
   output$selected_sig_full_1_v2_1 <- renderPlot({
@@ -278,7 +270,7 @@ server <- function(input, output) {
   })
   
   output$selected_sig_pm_full_1_v2_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v2()]], c(6, 4, 4)), 3, FALSE)
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v2()]], c(6, 4, 4)), 3)
   })
   
   output$selected_sig_full_1_v2_2 <- renderPlot({
@@ -311,7 +303,7 @@ server <- function(input, output) {
   output$corrplot2_v3_1 <- renderPlot({
     corrplot(pm_corr[index2_v3(), , drop = FALSE],
              is.corr = FALSE, bg = "#F8F8FF",
-             col = myCol(200), tl.col = "black",
+             col = myCol(10), tl.col = "black",
              tl.cex = 1.2, cl.pos = "n"
     )
   })
@@ -374,7 +366,7 @@ server <- function(input, output) {
   })
   
   output$selected_sig_full_v3_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index2_v3()]], c(6, 4, 4)), 3, FALSE)
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index2_v3()]], c(6, 4, 4)), 3)
   })
   
   output$selected_sig_2_v3_1 <- renderPlot({
@@ -392,7 +384,7 @@ server <- function(input, output) {
   })
   
   output$selected_sig_full_2_v3_1 <- renderPlot({
-    visPMS_full_modified(sig_full_v3[, rank1_v3()], 3, FALSE)
+    visPMS_full_modified(sig_full_v3[, rank1_v3()], 3)
   })
   
   output$selected_sig_full_pm_2_v3_1 <- renderPlot({
@@ -413,7 +405,7 @@ server <- function(input, output) {
   })
   
   output$selected_sig_full_2_v3_2 <- renderPlot({
-    visPMS_full_modified(sig_full_v3[, indexS2_v3()], 3, FALSE)
+    visPMS_full_modified(sig_full_v3[, indexS2_v3()], 3)
   })
   
   output$selected_sig_full_pm_2_v3_2 <- renderPlot({
@@ -449,7 +441,7 @@ server <- function(input, output) {
   output$corrplot2_v2_1 <- renderPlot({
     corrplot(pm_corr[index2_v2(), , drop = FALSE],
              is.corr = FALSE, bg = "#F8F8FF",
-             col = myCol(200), tl.col = "black",
+             col = myCol(10), tl.col = "black",
              tl.cex = 1.2, cl.pos = "n"
     )
   })
@@ -513,7 +505,7 @@ server <- function(input, output) {
   })
   
   output$selected_sig_full_v2_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index2_v2()]], c(6, 4, 4)), 3, FALSE)
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[index2_v2()]], c(6, 4, 4)), 3)
   })
   
   output$selected_sig_2_v2_1 <- renderPlot({
@@ -531,13 +523,13 @@ server <- function(input, output) {
   })
   
   output$selected_sig_full_2_v2_1 <- renderPlot({
-    visPMS_full_modified(sig_full_v2[, rank1_v2() + 3], 3, FALSE)
+    visPMS_full_modified(sig_full_v2[, rank1_v2() + 3], 3)
   })
   
   output$selected_sig_full_pm_2_v2_1 <- renderPlot({
     if (as.character(input$method_2_v2) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, rank1_v2() + 3 ])[[1]]
-      pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
+      pmsignature:::visPMS_ind(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, rank1_v2() + 3 ])[[1]], 
+                               3, isScale = TRUE)      
     }
   })
   
@@ -552,13 +544,13 @@ server <- function(input, output) {
   })
   
   output$selected_sig_full_2_v2_2 <- renderPlot({
-    visPMS_full_modified(sig_full_v2[, indexS2_v2() + 3], 3, FALSE)
+    visPMS_full_modified(sig_full_v2[, indexS2_v2() + 3], 3)
   })
   
   output$selected_sig_full_pm_2_v2_2 <- renderPlot({
     if (as.character(input$method_2_v2) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, indexS2_v2() + 3 ])[[1]]
-      pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
+      pmsignature:::visPMS_ind(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, indexS2_v2() + 3 ])[[1]], 
+                               3, isScale = TRUE)      
     }
   })
 
@@ -579,7 +571,7 @@ server <- function(input, output) {
   
   # input file plot
   output$similar_full <- renderPlot({
-    visPMS_full_modified(fu_vector(), 3, FALSE)
+    visPMS_full_modified(fu_vector(), 3)
   })
 
   # correlation with v2
@@ -676,7 +668,7 @@ server <- function(input, output) {
   
   # plot with v2
   output$fu_plot_v2<- renderPlot({
-    visPMS_full_modified(sig_full_v2[, which.max(corr_full_v2()) + 3], 3, FALSE)
+    visPMS_full_modified(sig_full_v2[, which.max(corr_full_v2()) + 3], 3)
   })
   
   # plot with pm
@@ -686,7 +678,7 @@ server <- function(input, output) {
   
   # plot with v3
   output$fu_plot_v3<- renderPlot({
-    visPMS_full_modified(sig_full_v3[, which.max(corr_full_v3()) + 2], 3, FALSE) 
+    visPMS_full_modified(sig_full_v3[, which.max(corr_full_v3()) + 2], 3) 
   })
 
   # box with v2
@@ -878,7 +870,7 @@ server <- function(input, output) {
 
   # plot with v2
   output$pm_plot_v2 <- renderPlot({
-    visPMS_full_modified(sig_full_v2[, which.max(corr_vec_v2()) + 3], 3, FALSE)
+    visPMS_full_modified(sig_full_v2[, which.max(corr_vec_v2()) + 3], 3)
   })
   
   # plot with pm
@@ -888,7 +880,7 @@ server <- function(input, output) {
 
   # plot with v3
   output$pm_plot_v3 <- renderPlot({
-    visPMS_full_modified(sig_full_v3[, which.max(corr_vec_v3()) + 2], 3, FALSE)
+    visPMS_full_modified(sig_full_v3[, which.max(corr_vec_v3()) + 2], 3)
   })
 
   # sig text with v2
@@ -933,12 +925,8 @@ server <- function(input, output) {
     contentType = "text/csv"
   )
   
-  version <- reactive({
-    as.character(input$heatmap)
-  })
-  
   corr_mat_pg5 <- reactive({
-    if(version() == "v2"){
+    if(as.character(input$heatmap) == "v2"){
       corr_mat <- corr_mat_v2
     } else {
       corr_mat <- corr_mat_v3
