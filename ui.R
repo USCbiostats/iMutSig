@@ -138,7 +138,8 @@ ui <- dashboardPage(
                   ),
                   
                   box(
-                    width = 2
+                    width = 2,
+                    plotOutput("selected_sig_full_pm_1_v3", height = 180)
                   )
                   
                 ),
@@ -261,7 +262,8 @@ ui <- dashboardPage(
                   ),
                   
                   box(
-                    width = 2
+                    width = 2,
+                    plotOutput("selected_sig_full_pm_1_v2", height = 180)
                   )
 
                 ),
@@ -409,7 +411,8 @@ ui <- dashboardPage(
                   ),
                   
                   box(
-                    width = 2
+                    width = 2,
+                    plotOutput(paste0('selected_sig_full_pm_2_v3_', 1), height = 180)
                   )
                 ), 
                 
@@ -427,7 +430,8 @@ ui <- dashboardPage(
                   ), 
                   
                   box(
-                    width = 2
+                    width = 2,
+                    plotOutput(paste0('selected_sig_full_pm_2_v3_', 2), height = 180)
                   )
                 )
         ),
@@ -538,7 +542,8 @@ ui <- dashboardPage(
                   ),
                   
                   box(
-                    width = 2
+                    width = 2,
+                    plotOutput(paste0('selected_sig_full_pm_2_v2_', 1), height = 180)
                   )
                 ), 
                 
@@ -556,7 +561,8 @@ ui <- dashboardPage(
                   ), 
                   
                   box(
-                    width = 2
+                    width = 2,
+                    plotOutput(paste0('selected_sig_full_pm_2_v2_', 2), height = 180)
                   )
                 )
         ),
