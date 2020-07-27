@@ -6,8 +6,6 @@ library(DT)
 library(corrplot)
 library(stringr)
 library(pmsignature)
-library(d3heatmap)
-library(decompTumor2Sig)
 
 source("Background.R")
 

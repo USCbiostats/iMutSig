@@ -900,8 +900,8 @@ server <- function(input, output) {
     return(corr_mat[[as.character(input$method_5)]])
   })
   
-  output$heatmap_v <- renderD3heatmap({
-    d3heatmap(
+  output$heatmap_v <- d3heatmap::renderD3heatmap({
+    d3heatmap::d3heatmap(
       corr_mat_pg5(),
       colors = "Blues",
       Rowv = NA, Colv = NA
