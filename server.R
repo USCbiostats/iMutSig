@@ -1,5 +1,5 @@
 server <- function(input, output) {
-  addClass(selector = "body", class = "sidebar-collapse")
+  removeClass(selector = "body", class = "sidebar-collapse")
   
   
   output$menu <- renderMenu({4
@@ -8,6 +8,7 @@ server <- function(input, output) {
                icon = icon("calendar"))
     )
   })
+  
   
   ###########
   # Page 1-v3

@@ -14,7 +14,6 @@ visPMS_full_modified <- function(Fvec, numBases) {
   )
   
   X <- data.frame(probability = Fvec)
-  # X$strand <- factor(rep(c("plus", "minus"), 1536), levels=c("plus", "minus"))
   X$subtype <- factor(subPattern, levels=c("C>A", "C>G", "C>T", "T>A", "T>C", "T>G"))
   X$flank <- paste0(rep(c("A", "C", "G", "T"), each=4), rep("."), rep(c("A", "C", "G", "T"), 4))
   
