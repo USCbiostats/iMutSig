@@ -21,20 +21,21 @@ server <- function(input, output) {
   })
   
   indexS_v3 <- reactive({
-    as.numeric(stringr::str_extract(input$N_S_D_v3,"\\d+"))
+    as.character(input$N_S_D_v3)
   })
   
-  output$selected_sig_1_v3 <- renderPlot({
-    visPMS_full_modified(sig_full_v3[, as.character(input$N_F_v3)], 3)
-  })
+  output$selected_sig_1_v3 <- renderCachedPlot({
+    visPMS_full_modified(sig_full_v3[, input$N_F_v3], 3)
+  }, cacheKeyExpr = { input$N_F_v3 })
   
-  output$corrplot1_2_v3 <- renderPlot({
-    corrplot(cosmic_corr_v3[index_v3(), , drop = FALSE],
+  output$corrplot1_2_v3 <- renderCachedPlot({
+    corrplot(cosmic_corr_v3[input$N_F_v3, , drop = FALSE],
              is.corr = FALSE, bg = "#F8F8FF",
              col = myCol(10), tl.col = "black",
              tl.cex = 0.8, cl.pos = "n", cl.lim = c(0, 1)
     )
-  })
+  }, cacheKeyExpr = { input$N_F_v3 })
+  
   
   output$mytable1_v3 <- renderDataTable({
     table <- cbind(
@@ -51,15 +52,15 @@ server <- function(input, output) {
       formatStyle(columns = 1:3, "text-align" = "center")
   }) 
   
-  output$corrplot1_1_v3 <- renderPlot({
-    corrplot(t(corr_mat_1_v3())[index_v3(), , drop = FALSE],
+  output$corrplot1_1_v3 <- renderCachedPlot({
+    corrplot(t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, , drop = FALSE],
              is.corr = FALSE,
              tl.col = "black", method = "shade", col = col(200),
-             p.mat = t(corr_mat_1_v3())[index_v3(), , drop = FALSE] %>% round(1),
+             p.mat = t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, , drop = FALSE] %>% round(1),
              insig = "p-value", tl.srt = 0, tl.offset = 1,
              tl.cex = 1.2, cl.pos = "n"
     )
-  })
+  }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
   output$selected1_v3_1 <- renderValueBox({
     valueBox(
@@ -71,7 +72,7 @@ server <- function(input, output) {
   
   output$selected1_v3_2 <- renderValueBox({
     valueBox(
-      paste0("P", indexS_v3()), "pmsignature input",
+      indexS_v3(), "pmsignature input",
       icon = icon("user"),
       color = "yellow"
     )
@@ -85,17 +86,17 @@ server <- function(input, output) {
   })
 
   
-  output$selected_sig_full_1_v3 <- renderPlot({
-    visPMS_full_modified(sig_full_v3[, index_v3()], 3)
-  })
+  output$selected_sig_full_1_v3 <- renderCachedPlot({
+    visPMS_full_modified(sig_full_v3[, input$N_F_v3], 3)
+  }, cacheKeyExpr = { input$N_F_v3 })
   
   
-  output$selected_sig_full_pm_1_v3 <- renderPlot({
+  output$selected_sig_full_pm_1_v3 <- renderCachedPlot({
     if (as.character(input$method_1_v3) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, index_v3()])[[1]]
+      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, input$N_F_v3])[[1]]
       pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
     }
-  })
+  }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
   # the most similar signature
   output$selected_sig_text_1_v3_1 <- renderText({
@@ -108,15 +109,16 @@ server <- function(input, output) {
     ))
   })
   
-  output$selected_sig_pm_full_1_v3_1 <- renderPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v3())[index_v3(), ], decreasing = TRUE)[1:1])))
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3, FALSE)
-  })
+  output$selected_sig_pm_full_1_v3_1 <- renderCachedPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, ], decreasing = TRUE)[1:1])))
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3)
+  }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
-  output$selected_sig_full_1_v3_1 <- renderPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v3())[index_v3(), ], decreasing = TRUE)[1:1])))
+  
+  output$selected_sig_full_1_v3_1 <- renderCachedPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, ], decreasing = TRUE)[1:1])))
     pmsignature:::visPMS_ind(Fs[[rank]], 5, isScale = TRUE)
-  })
+  }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
   # self-defined signature
   output$highest_v3 <- renderValueBox({
@@ -129,20 +131,20 @@ server <- function(input, output) {
   
   output$selected_sig_text_1_v3_2 <- renderText({
     HTML(paste(
-      "<b>Type:</b> pmsignature ", paste0("P", indexS_v3()), "</br>",
+      "<b>Type:</b> pmsignature ", indexS_v3(), "</br>",
       "<b>Similarity(selected):</b> ", t(corr_mat_1_v3())[index_v3(), indexS_v3()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
       paste(names(which(pm_corr[indexS_v3(), ] == 1)), collapse = ", ")
     ))
   })
   
-  output$selected_sig_pm_full_1_v3_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v3()]], c(6, 4, 4)), 3)
-  })
+  output$selected_sig_pm_full_1_v3_2 <- renderCachedPlot({
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[input$N_S_D_v3]], c(6, 4, 4)), 3)
+  }, cacheKeyExpr = { input$N_S_D_v3 })
   
-  output$selected_sig_full_1_v3_2 <- renderPlot({
-    pmsignature:::visPMS_ind(Fs[[indexS_v3()]], 5, isScale = TRUE)
-  })
+  output$selected_sig_full_1_v3_2 <- renderCachedPlot({
+    pmsignature:::visPMS_ind(Fs[[input$N_S_D_v3]], 5, isScale = TRUE)
+  }, cacheKeyExpr = { input$N_S_D_v3 })
   
   ###########
   # Page 1-v2
@@ -152,16 +154,16 @@ server <- function(input, output) {
   })
   
   index_v2 <- reactive({
-    as.numeric(stringr::str_extract(input$N_F_v2,"\\d+"))
+    as.character(input$N_F_v2)
   })
   
   indexS_v2 <- reactive({
-    as.numeric(stringr::str_extract(input$N_S_D_v2,"\\d+"))
+    as.character(input$N_S_D_v2)
   })
   
-  output$selected_sig_1_v2 <- renderPlot({
-    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3)
-  })
+  output$selected_sig_1_v2 <- renderCachedPlot({
+    visPMS_full_modified(sig_full_v2[, input$N_F_v2], 3)
+  }, cacheKeyExpr = { input$N_F_v2 })
   
   output$corrplot1_2_v2 <- renderPlot({
     corrplot(cosmic_corr_v2[index_v2(), , drop = FALSE],
@@ -173,7 +175,7 @@ server <- function(input, output) {
   
   output$mytable1_v2 <- renderDataTable({
     table <- cbind(
-      `COSMIC v2` = paste0("C", index_v2()),
+      `COSMIC v2` = index_v2(),
       `pmsignature` = paste0("P", 1:dim(corr_mat_1_v2())[1]),
       `Similarity` = round(corr_mat_1_v2()[, index_v2()], 3)
     )
@@ -186,19 +188,19 @@ server <- function(input, output) {
       formatStyle(columns = 1:3, "text-align" = "center")
   }) 
   
-  output$corrplot1_1_v2 <- renderPlot({
-    corrplot(t(corr_mat_1_v2())[index_v2(), , drop = FALSE],
+  output$corrplot1_1_v2 <- renderCachedPlot({
+    corrplot(t(corr_mat_v2[[input$method_1_v2]])[input$N_F_v2, , drop = FALSE],
              is.corr = FALSE,
              tl.col = "black", method = "shade", col = col(200),
              p.mat = t(corr_mat_1_v2())[index_v2(), , drop = FALSE] %>% round(1),
              insig = "p-value", tl.srt = 0, tl.offset = 1,
              tl.cex = 1.2, cl.pos = "n"
     )
-  })
+  }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
   output$selected1_v2_1 <- renderValueBox({
     valueBox(
-      paste0("C", index_v2()), "COSMIC signature",
+      index_v2(), "COSMIC signature",
       icon = icon("list"),
       color = "blue"
     )
@@ -206,7 +208,7 @@ server <- function(input, output) {
   
   output$selected1_v2_2 <- renderValueBox({
     valueBox(
-      paste0("P", indexS_v2()), "pmsignature input",
+      indexS_v2(), "pmsignature input",
       icon = icon("user"),
       color = "yellow"
     )
@@ -219,16 +221,16 @@ server <- function(input, output) {
     ))
   })
   
-  output$selected_sig_full_1_v2 <- renderPlot({
-    visPMS_full_modified(sig_full_v2[, index_v2() + 3], 3)
-  })
+  output$selected_sig_full_1_v2 <- renderCachedPlot({
+    visPMS_full_modified(sig_full_v2[, input$N_F_v2], 3)
+  }, cacheKeyExpr = { input$N_F_v2 })
   
-  output$selected_sig_full_pm_1_v2 <- renderPlot({
+  output$selected_sig_full_pm_1_v2 <- renderCachedPlot({
     if (as.character(input$method_1_v2) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, index_v2() + 3 ])[[1]]
+      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, input$N_F_v2 ])[[1]]
       pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
     }
-  })
+  }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
   # the most similar signature
   output$selected_sig_text_1_v2_1 <- renderText({
@@ -241,15 +243,15 @@ server <- function(input, output) {
     ))
   })
   
-  output$selected_sig_pm_full_1_v2_1 <- renderPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v2())[index_v2(), ], decreasing = TRUE)[1:1])))
+  output$selected_sig_pm_full_1_v2_1 <- renderCachedPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2[[input$method_1_v2]])[input$N_F_v2, ], decreasing = TRUE)[1:1])))
     visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3)
-  })
+  }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
-  output$selected_sig_full_1_v2_1 <- renderPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v2())[index_v2(), ], decreasing = TRUE)[1:1])))
+  output$selected_sig_full_1_v2_1 <- renderCachedPlot({
+    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2[[input$method_1_v2]])[input$N_F_v2, ], decreasing = TRUE)[1:1])))
     pmsignature:::visPMS_ind(Fs[[rank]], 5, isScale = TRUE)
-  })
+  }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
   # self-defined signature
   output$highest_v2 <- renderValueBox({
@@ -262,7 +264,7 @@ server <- function(input, output) {
 
   output$selected_sig_text_1_v2_2 <- renderText({
     HTML(paste(
-      "<b>Type:</b> pmsignature ", paste0("P", indexS_v2()), "</br>",
+      "<b>Type:</b> pmsignature ", indexS_v2(), "</br>",
       "<b>Similarity(selected):</b> ", t(corr_mat_1_v2())[index_v2(), indexS_v2()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
       paste(names(which(pm_corr[indexS_v2(), ] == 1)), collapse = ", ")
