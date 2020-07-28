@@ -108,7 +108,19 @@ if (Update){
   sig_full_v3 <- sig_file_v3[order(sig_file_v3[,1]),]
   sig_full_v3 <- data.frame(sig_full_v3)
   
-  save(sig_full_v2, sig_full_v3, file="inst/extdata/COSMIC_sig.rdata")
+  sig_pm_v2 <- rep(list(NA), ncol(sig_full_v2)-3)
+  for(i in 1:(ncol(sig_full_v2)-3)){
+    sig_pm_v2[[i]] <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, i + 3])[[1]]
+  }
+  names(sig_pm_v2) <- colnames(sig_full_v2)[-c(1:3)]
+  
+  sig_pm_v3 <- rep(list(NA), ncol(sig_full_v3)-3)
+  for(i in 1:(ncol(sig_full_v3)-2)){
+    sig_pm_v3[[i]] <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, i + 2])[[1]]
+  }
+  names(sig_pm_v3) <- colnames(sig_full_v3)[-c(1,2)]
+  
+  save(sig_full_v2, sig_full_v3, sig_pm_v2, sig_pm_v3, file="inst/extdata/COSMIC_sig.rdata")
   
   pm_corr <- read.csv("inst/extdata/pm_corr.csv", na = "0") %>% as.matrix()
   pm_corr[is.na(pm_corr)] <- 0
