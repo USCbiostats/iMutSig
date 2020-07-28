@@ -271,13 +271,13 @@ server <- function(input, output) {
     ))
   })
   
-  output$selected_sig_pm_full_1_v2_2 <- renderPlot({
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[indexS_v2()]], c(6, 4, 4)), 3)
-  })
+  output$selected_sig_pm_full_1_v2_2 <- renderCachedPlot({
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[input$N_S_D_v2]], c(6, 4, 4)), 3)
+  }, cacheKeyExpr = { input$N_S_D_v2 })
   
-  output$selected_sig_full_1_v2_2 <- renderPlot({
-    pmsignature:::visPMS_ind(Fs[[indexS_v2()]], 5, isScale = TRUE)
-  })
+  output$selected_sig_full_1_v2_2 <- renderCachedPlot({
+    pmsignature:::visPMS_ind(Fs[[input$N_S_D_v2]], 5, isScale = TRUE)
+  }, cacheKeyExpr = { input$N_S_D_v2 })
   
   ###########
   # Page 2-v3
