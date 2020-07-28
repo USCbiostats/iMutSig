@@ -9,22 +9,9 @@ server <- function(input, output) {
     )
   })
   
-  
   ###########
   # Page 1-v3
   ###########
-  corr_mat_1_v3 <- reactive({
-    return(corr_mat_v3[[as.character(input$method_1_v3)]])
-  })
-  
-  index_v3 <- reactive({
-    as.character(input$N_F_v3)
-  })
-  
-  indexS_v3 <- reactive({
-    as.character(input$N_S_D_v3)
-  })
-  
   output$selected_sig_1_v3 <- renderCachedPlot({
     visPMS_full_modified(sig_full_v3[, input$N_F_v3], 3)
   }, cacheKeyExpr = { input$N_F_v3 })
@@ -40,9 +27,9 @@ server <- function(input, output) {
   
   output$mytable1_v3 <- renderDataTable({
     table <- cbind(
-      `COSMIC v3` = index_v3(),
-      `pmsignature` = paste0("P", 1:dim(corr_mat_1_v3())[1]),
-      `Similarity` = round(corr_mat_1_v3()[, index_v3()], 3)
+      `COSMIC v3` = input$N_F_v3,
+      `pmsignature` = paste0("P", 1:dim(corr_mat_v3[[input$method_1_v3]])[1]),
+      `Similarity` = round(corr_mat_v3[[input$method_1_v3]][, input$N_F_v3], 3)
     )
     table <- table[order(table[, 3], decreasing = TRUE), ]
     rownames(table) <- NULL
@@ -65,7 +52,7 @@ server <- function(input, output) {
   
   output$selected1_v3_1 <- renderValueBox({
     valueBox(
-      paste0(index_v3()), "COSMIC signature",
+      paste0(input$N_F_v3), "COSMIC signature",
       icon = icon("list"),
       color = "blue"
     )
@@ -73,7 +60,7 @@ server <- function(input, output) {
   
   output$selected1_v3_2 <- renderValueBox({
     valueBox(
-      indexS_v3(), "pmsignature input",
+      input$N_S_D_v3, "pmsignature input",
       icon = icon("user"),
       color = "yellow"
     )
@@ -81,11 +68,11 @@ server <- function(input, output) {
   
   output$selected_sig_text_1_v3 <- renderText({
     HTML(paste0(
-      "<b>Type:</b> COSMIC signature ", index_v3(), "</br>",
-      "<b>", "Cancer Membership:</b> ", paste(names(which(cosmic_corr_v3[index_v3(), ] > 0)), collapse = ", ")
+      "<b>Type:</b> COSMIC signature ", input$N_F_v3, "</br>",
+      "<b>", "Cancer Membership:</b> ", paste(names(which(cosmic_corr_v3[input$N_F_v3, ] > 0)), collapse = ", ")
     ))
   })
-
+  
   
   output$selected_sig_full_1_v3 <- renderCachedPlot({
     visPMS_full_modified(sig_full_v3[, input$N_F_v3], 3)
@@ -107,7 +94,7 @@ server <- function(input, output) {
   output$selected_sig_text_1_v3_1 <- renderText({
     HTML(paste(
       "<b>Type:</b> pmsignature ", rank_1_v3(), "</br>",
-      "<b>Similarity(highest):</b> ", t(corr_mat_1_v3())[index_v3(), rank_1_v3()] %>% round(3), "</br>", "</b>",
+      "<b>Similarity(highest):</b> ", t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, rank_1_v3()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
       paste(names(which(pm_corr[rank_1_v3(), ] == 1)), collapse = ", ")
     ))
@@ -132,10 +119,10 @@ server <- function(input, output) {
   # self-defined signature
   output$selected_sig_text_1_v3_2 <- renderText({
     HTML(paste(
-      "<b>Type:</b> pmsignature ", indexS_v3(), "</br>",
-      "<b>Similarity(selected):</b> ", t(corr_mat_1_v3())[index_v3(), indexS_v3()] %>% round(3), "</br>", "</b>",
+      "<b>Type:</b> pmsignature ", input$N_S_D_v3, "</br>",
+      "<b>Similarity(selected):</b> ", t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, input$N_S_D_v3] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
-      paste(names(which(pm_corr[indexS_v3(), ] == 1)), collapse = ", ")
+      paste(names(which(pm_corr[input$N_S_D_v3, ] == 1)), collapse = ", ")
     ))
   })
   
@@ -228,8 +215,8 @@ server <- function(input, output) {
   
   output$selected_sig_full_pm_1_v2 <- renderCachedPlot({
     if (as.character(input$method_1_v2) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, input$N_F_v2 ])[[1]]
-      pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
+    tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, input$N_F_v2 ])[[1]]
+    pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE) 
     }
   }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
