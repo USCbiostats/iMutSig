@@ -81,8 +81,7 @@ server <- function(input, output) {
   
   output$selected_sig_full_pm_1_v3 <- renderCachedPlot({
     if (as.character(input$method_1_v3) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, input$N_F_v3])[[1]]
-      pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
+      pmsignature:::visPMS_ind(sig_pm_v3[[input$N_F_v3]], 3, isScale = TRUE)      
     }
   }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
@@ -203,8 +202,7 @@ server <- function(input, output) {
   
   output$selected_sig_full_pm_1_v2 <- renderCachedPlot({
     if (as.character(input$method_1_v2) == "Collapse"){
-    tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, input$N_F_v2 ])[[1]]
-    pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE) 
+      pmsignature:::visPMS_ind(sig_pm_v2[[input$N_F_v2]], 3, isScale = TRUE) 
     }
   }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
@@ -367,8 +365,7 @@ server <- function(input, output) {
   
   output$selected_sig_full_pm_2_v3_1 <- renderPlot({
     if (as.character(input$method_2_v3) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, rank1_v3()])[[1]]
-      pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
+      pmsignature:::visPMS_ind(sig_pm_v3[[rank1_v3()]], 3, isScale = TRUE)      
     }
   })
   
@@ -388,8 +385,7 @@ server <- function(input, output) {
   
   output$selected_sig_full_pm_2_v3_2 <- renderPlot({
     if (as.character(input$method_2_v3) == "Collapse"){
-      tmp <- decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v3[, indexS2_v3() ])[[1]]
-      pmsignature:::visPMS_ind(tmp, 3, isScale = TRUE)      
+      pmsignature:::visPMS_ind(sig_pm_v3[[indexS2_v3()]], 3, isScale = TRUE)      
     }
   })
   
@@ -506,8 +502,7 @@ server <- function(input, output) {
   
   output$selected_sig_full_pm_2_v2_1 <- renderPlot({
     if (as.character(input$method_2_v2) == "Collapse"){
-      pmsignature:::visPMS_ind(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, rank1_v2() + 3 ])[[1]], 
-                               3, isScale = TRUE)      
+      pmsignature:::visPMS_ind(sig_pm_v2[[rank1_v2() + 3]], 3, isScale = TRUE)      
     }
   })
   
@@ -527,8 +522,7 @@ server <- function(input, output) {
   
   output$selected_sig_full_pm_2_v2_2 <- renderPlot({
     if (as.character(input$method_2_v2) == "Collapse"){
-      pmsignature:::visPMS_ind(decompTumor2Sig::convertAlexandrov2Shiraishi(sig_full_v2[, indexS2_v2() + 3 ])[[1]], 
-                               3, isScale = TRUE)      
+      pmsignature:::visPMS_ind(sig_pm_v2[[indexS2_v2() + 3]], 3, isScale = TRUE)      
     }
   })
 
@@ -921,7 +915,7 @@ server <- function(input, output) {
   })
   
   output$heatmap_dynamic <- renderUI({
-    width <- ifelse(version()=="v2", "600px", "1200px")
+    width <- ifelse(as.character(input$heatmap)=="v2", "600px", "1200px")
     d3heatmap::d3heatmapOutput("heatmap_v", width = width,
                     height = "500px")
   })
