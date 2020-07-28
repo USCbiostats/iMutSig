@@ -101,7 +101,8 @@ if (Update){
                 "inst/extdata/sig_v2.txt", mode = 'wb')
   sig_file_v2 <- read.delim("inst/extdata/sig_v2.txt") 
   sig_full_v2 <- sig_file_v2[order(sig_file_v2[,1]),1:33]
-  
+  colnames(sig_full_v2)[-c(1:3)] <- paste0("C",1:30)
+    
   download.file("https://cancer.sanger.ac.uk/signatures/COSMIC_Mutational_Signatures_v3.1.xlsx",
                 "inst/extdata/sig_v3.1.xlsx", mode = 'wb')
   sig_file_v3 <- readxl::read_excel("inst/extdata/sig_v3.1.xlsx") 
