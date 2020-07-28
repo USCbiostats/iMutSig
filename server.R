@@ -99,36 +99,36 @@ server <- function(input, output) {
   }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
   # the most similar signature
+  rank_1_v3 <- reactive({
+     names(sort(t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, ], decreasing = TRUE)[1:1])
+  })
+  
   output$selected_sig_text_1_v3_1 <- renderText({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v3())[index_v3(), ], decreasing = TRUE)[1:1])))
     HTML(paste(
-      "<b>Type:</b> pmsignature ", paste0("P", rank), "</br>",
-      "<b>Similarity(highest):</b> ", t(corr_mat_1_v3())[index_v3(), rank] %>% round(3), "</br>", "</b>",
+      "<b>Type:</b> pmsignature ", rank_1_v3(), "</br>",
+      "<b>Similarity(highest):</b> ", t(corr_mat_1_v3())[index_v3(), rank_1_v3()] %>% round(3), "</br>", "</b>",
       "<b>", "Cancer Membership:", "</b>",
-      paste(names(which(pm_corr[rank, ] == 1)), collapse = ", ")
+      paste(names(which(pm_corr[rank_1_v3(), ] == 1)), collapse = ", ")
     ))
   })
   
   output$selected_sig_pm_full_1_v3_1 <- renderCachedPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, ], decreasing = TRUE)[1:1])))
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3)
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank_1_v3()]], c(6, 4, 4)), 3)
   }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
   
   output$selected_sig_full_1_v3_1 <- renderCachedPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v3[[input$method_1_v3]])[input$N_F_v3, ], decreasing = TRUE)[1:1])))
-    pmsignature:::visPMS_ind(Fs[[rank]], 5, isScale = TRUE)
+    pmsignature:::visPMS_ind(Fs[[rank_1_v3()]], 5, isScale = TRUE)
   }, cacheKeyExpr = { list(input$N_F_v3, input$method_1_v3) })
   
-  # self-defined signature
   output$highest_v3 <- renderValueBox({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v3())[index_v3(), ], decreasing = TRUE)[1:1])))
     valueBox(
-      paste0("P", rank), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
+      paste0("P", rank_1_v3()), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
       color = "green"
     )
   })
   
+  # self-defined signature
   output$selected_sig_text_1_v3_2 <- renderText({
     HTML(paste(
       "<b>Type:</b> pmsignature ", indexS_v3(), "</br>",
