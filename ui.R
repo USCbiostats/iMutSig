@@ -51,7 +51,10 @@ ui <- dashboardPage(
         .skin-blue .main-header .navbar {
           background-color: #222D32;
         }
-        
+
+        .skin-blue .main-header .navbar .sidebar-toggle{
+          display:none;
+        }
       '))),
 
       tabItems(
