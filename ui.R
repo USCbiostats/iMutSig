@@ -310,10 +310,10 @@ ui <- dashboardPage(
 
         tabItem(tabName = "page2-v3",
                 fluidRow(
-                  valueBox(width = 2, color = "black",
+                  valueBox(width = 3, color = "black",
                            "Start choosing", "a pmsignature"),
                   
-                  box(width = 2, height = "102px",
+                  box(width = 1, height = "102px",
                       selectInput(inputId = "N_D_v3", label="pmsignature",
                                   choices = paste0("P",1:27),
                                   selected = 1)
@@ -439,10 +439,10 @@ ui <- dashboardPage(
 
         tabItem(tabName = "page2-v2",
                 fluidRow(
-                  valueBox(width = 2, color = "black",
+                  valueBox(width = 3, color = "black",
                            "Start choosing", "a pmsignature"),
                   
-                  box(width = 2, height = "102px",
+                  box(width = 1, height = "102px",
                       selectInput(inputId = "N_D_v2", label="pmsignature",
                                   choices = paste0("P",1:27),
                                   selected = 1)
