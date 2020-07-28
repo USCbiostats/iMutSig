@@ -243,19 +243,21 @@ server <- function(input, output) {
     ))
   })
   
+  rank_1_v2 <- reactive({
+    names(sort(t(corr_mat_v2[[input$method_1_v2]])[input$N_F_v2, ], decreasing = TRUE)[1:1])
+  })
+  
+  
   output$selected_sig_pm_full_1_v2_1 <- renderCachedPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2[[input$method_1_v2]])[input$N_F_v2, ], decreasing = TRUE)[1:1])))
-    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank]], c(6, 4, 4)), 3)
+    visPMS_full_modified(convertSignatureMatrixToVector(Fs[[rank_1_v2()]], c(6, 4, 4)), 3)
   }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
   output$selected_sig_full_1_v2_1 <- renderCachedPlot({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_v2[[input$method_1_v2]])[input$N_F_v2, ], decreasing = TRUE)[1:1])))
-    pmsignature:::visPMS_ind(Fs[[rank]], 5, isScale = TRUE)
+    pmsignature:::visPMS_ind(Fs[[rank_1_v2()]], 5, isScale = TRUE)
   }, cacheKeyExpr = { list(input$N_F_v2, input$method_1_v2) })
   
   # self-defined signature
   output$highest_v2 <- renderValueBox({
-    rank <- as.numeric(gsub("[^0-9.]", "", names(sort(t(corr_mat_1_v2())[index_v2(), ], decreasing = TRUE)[1:1])))
     valueBox(
       paste0("P", rank), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
       color = "green"
@@ -287,7 +289,7 @@ server <- function(input, output) {
   })
   
   index2_v3 <- reactive({
-    as.numeric(stringr::str_extract(input$N_D_v3,"\\d+"))
+    as.character(input$N_D_v3)
   })
   
   indexS2_v3 <- reactive({
