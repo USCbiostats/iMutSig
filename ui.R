@@ -20,6 +20,7 @@ ui <- dashboardPage(
     
 
     sidebar <- dashboardSidebar(    
+      width = 210,
       sidebarMenu(
       id="mysidebar",
       menuItem("COSMIC to pmsignature", icon = icon("chart-bar"), startExpanded = TRUE,
@@ -61,7 +62,7 @@ ui <- dashboardPage(
         tabItem(tabName = "page1-v3",
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Start choosing", "a COSMIC v3.1 signature"),
+                           "Choosing", "a COSMIC v3.1 signature"),
                   
                   box(width = 2, height = "102px",
                       selectInput(inputId = "N_F_v3", label="COSMIC",
@@ -187,7 +188,7 @@ ui <- dashboardPage(
                 # 1st row 
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Start choosing", "a COSMIC v2 signature"),
+                           "Choosing", "a COSMIC v2 signature"),
                   
                   box(width = 2, height = "102px",
                       selectInput(inputId = "N_F_v2", label="COSMIC",
@@ -311,10 +312,10 @@ ui <- dashboardPage(
         tabItem(tabName = "page2-v3",
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Start choosing", "a pmsignature"),
+                           "Choosing", "a pmsignature"),
                   
                   box(width = 1, height = "102px",
-                      selectInput(inputId = "N_D_v3", label="pmsignature",
+                      selectInput(inputId = "N_D_v3", label="",
                                   choices = paste0("P",1:27),
                                   selected = 1)
                       
@@ -440,10 +441,10 @@ ui <- dashboardPage(
         tabItem(tabName = "page2-v2",
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Start choosing", "a pmsignature"),
+                           "Choosing", "a pmsignature"),
                   
                   box(width = 1, height = "102px",
-                      selectInput(inputId = "N_D_v2", label="pmsignature",
+                      selectInput(inputId = "N_D_v2", label="",
                                   choices = paste0("P",1:27),
                                   selected = 1)
                       
@@ -596,7 +597,7 @@ ui <- dashboardPage(
                          box(width = NULL, height = "280px",
                              title = "COSMIC v2 signature",
                              status = "primary", solidHeader = TRUE,
-                             style="font-size:130%",
+                             style="font-size:110%",
                              dataTableOutput("fu_table_v2")
                          )
                   ),
@@ -605,7 +606,7 @@ ui <- dashboardPage(
                          box(width = NULL, height = "280px",
                              title = "COSMIC v3.1 signature",
                              status = "info", solidHeader = TRUE,
-                             style="font-size:130%",
+                             style="font-size:110%",
                              dataTableOutput("fu_table_v3")
                          )
                   ),
@@ -614,7 +615,7 @@ ui <- dashboardPage(
                          box(width = NULL, height = "280px",
                              title = "pmsignature", 
                              status = "success", solidHeader = TRUE,
-                             style="font-size:130%",
+                             style="font-size:110%",
                              dataTableOutput("fu_table_pm")
                          )
                   )
@@ -699,21 +700,21 @@ ui <- dashboardPage(
                 box(width = 4, height = "280px",
                     title = "COSMIC v2 signature", 
                     status = "primary", solidHeader = TRUE,
-                    style="font-size:130%",
+                    style="font-size:110%",
                     dataTableOutput("pm_table_v2")
                 ),
                 
                 box(width = 4, height = "280px",
                     title = "COSMIC v3.1 signature", 
                     status = "info", solidHeader = TRUE,
-                    style="font-size:130%",
+                    style="font-size:110%",
                     dataTableOutput("pm_table_v3")
                 ),
                 
                 box(width = 4, height = "280px",
                     title = "pmsignature",
                     status = "success", solidHeader = TRUE,
-                    style="font-size:130%",
+                    style="font-size:110%",
                     dataTableOutput("pm_table_pm")
                 )
               ), 

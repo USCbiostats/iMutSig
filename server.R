@@ -110,7 +110,7 @@ server <- function(input, output) {
   
   output$highest_v3 <- renderValueBox({
     valueBox(
-      paste0("P", rank_1_v3()), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
+      paste0(rank_1_v3()), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
       color = "green"
     )
   })
@@ -230,7 +230,7 @@ server <- function(input, output) {
   
   output$highest_v2 <- renderValueBox({
     valueBox(
-      paste0("P", rank_1_v2()), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
+      paste0(rank_1_v2()), "Most similar pmsignature", icon("thumbs-up", lib = "glyphicon"),
       color = "green"
     )
   })
