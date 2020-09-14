@@ -776,7 +776,7 @@ ui <- dashboardPage(
                   box(width = 2, height = "102px",
                       selectInput(inputId = "heatmap", label="COSMIC version",
                                   choices = c("v2", "v3.1"),
-                                  selected = "v2")
+                                  selected = "v3.1")
                   ),
                   box(width = 2, height = "102px",
                       selectInput(inputId = "method_5", label="Method",
