@@ -31,13 +31,19 @@ if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))  
 }
 
-if ("pmsignature" %in% rownames(installed.packages())){
+if (!("d3heatmap" %in% rownames(installed.packages()))){
+  devtools::install_github("rstudio/d3heatmap")
+}
+
+if (!("pmsignature" %in% rownames(installed.packages()))){
   devtools::install_github("friend1ws/pmsignature", ref = "devel")
 }
 
-if ("decompTumor2Sig" %in% rownames(installed.packages())){
+if (!("decompTumor2Sig" %in% rownames(installed.packages()))){
   devtools::install_github("zhiiiyang/decompTumor2Sig")
 }
+
+
 ```
 
 By clicking the `Run App` button in either `ui.R` or `server.R` script, a Shiny app will run locally. Or you can simply enter `runApp()` in the console. 
