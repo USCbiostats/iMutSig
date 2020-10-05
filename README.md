@@ -26,7 +26,7 @@ To run the Shiny app, you need to install the following packages. If you run int
 
 ```
 packages <- c("shinyjs", "shinydashboard", "shiny", "dplyr", 
-              "DT", "corrplot", "stringr", "devtools", "d3heatmap")
+              "DT", "corrplot", "stringr", "devtools")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))  
 }
