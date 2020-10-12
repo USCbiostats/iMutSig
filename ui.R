@@ -62,7 +62,7 @@ ui <- dashboardPage(
         tabItem(tabName = "page1-v3",
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Choosing", "a COSMIC v3.1 signature"),
+                           "Choose", "a COSMIC v3.1 signature"),
                   
                   box(width = 2, height = "102px",
                       selectInput(inputId = "N_F_v3", label="COSMIC",
@@ -81,7 +81,7 @@ ui <- dashboardPage(
                 fluidRow(
                   box(
                     width = 5, 
-                    title = paste("Chosen a COSMIC v3.1 signature"),
+                    title = paste("Chosen a pmsignature"),
                     plotOutput("selected_sig_1_v3", height = 200)
                   ),
                   
@@ -106,10 +106,10 @@ ui <- dashboardPage(
                 
                 fluidRow(
                   valueBox(width = 2, color = "yellow",
-                           "Choose", "a 2nd COSMIC v3.1 signature"),
+                           "Choose", "a pmsignature"),
                   
                   box(width = 2, height = "102px",
-                      selectInput(inputId = "N_S_D_v3", label="pmsignature",
+                      selectInput(inputId = "N_S_D_v3", label="2nd pmsignature",
                                   choices = paste0("P",1:27),
                                   selected = 3) #N_S_D_v3
                   ),
@@ -188,7 +188,7 @@ ui <- dashboardPage(
                 # 1st row 
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Choosing", "a COSMIC v2 signature"),
+                           "Choose", "a COSMIC v2 signature"),
                   
                   box(width = 2, height = "102px",
                       selectInput(inputId = "N_F_v2", label="COSMIC",
@@ -231,7 +231,7 @@ ui <- dashboardPage(
                 
                 fluidRow(
                   valueBox(width = 2, color = "yellow",
-                           "Choose", "a 2nd COSMIC v2 signature"),
+                           "Choose", "a pmsignature"),
                   
                   box(width = 2, height = "102px",
                       selectInput(inputId = "N_S_D_v2", label="2nd pmsignature",
@@ -312,7 +312,7 @@ ui <- dashboardPage(
         tabItem(tabName = "page2-v3",
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Choosing", "a pmsignature"),
+                           "Choose", "a pmsignature"),
                   
                   box(width = 1, height = "102px",
                       selectInput(inputId = "N_D_v3", label="",
@@ -361,10 +361,10 @@ ui <- dashboardPage(
                 
                 fluidRow(
                   valueBox(width = 2, color = "yellow",
-                           "Choose", "a 2nd pmsignature"),
+                           "Choose", "a COSMIC v3.1 signature"),
                   
                   box(width = 2, height = "102px",
-                      selectInput(inputId = "N_D_S_v3", label="COSMIC",
+                      selectInput(inputId = "N_D_S_v3", label="2nd COSMIC signature",
                                   choices = colnames(sig_full_v3)[-c(1,2)],
                                   selected = 3)),
                       
@@ -441,7 +441,7 @@ ui <- dashboardPage(
         tabItem(tabName = "page2-v2",
                 fluidRow(
                   valueBox(width = 3, color = "black",
-                           "Choosing", "a pmsignature"),
+                           "Choose", "a pmsignature"),
                   
                   box(width = 1, height = "102px",
                       selectInput(inputId = "N_D_v2", label="",
@@ -491,10 +491,10 @@ ui <- dashboardPage(
                 
                 fluidRow(
                   valueBox(width = 2, color = "yellow",
-                           "Choose", "a 2nd pmsignature"),
+                           "Choose", "a COSMIC v2 signature"),
                   
                   box(width = 2, height = "102px",
-                      selectInput(inputId = "N_D_S_v2", label="COSMIC",
+                      selectInput(inputId = "N_D_S_v2", label="2nd COSMIC signature",
                                   choices = paste0("C",1:30),
                                   selected = 3)),
                   

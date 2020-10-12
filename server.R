@@ -191,7 +191,7 @@ server <- function(input, output) {
   
   output$selected_sig_text_1_v2 <- renderText({
     HTML(paste0(
-      "<b>Type:</b> COSMIC signature C", input$N_F_v2, "</br>",
+      "<b>Type:</b> COSMIC signature ", input$N_F_v2, "</br>",
       "<b>", "Cancer Membership:</b> ", paste(names(which(cosmic_corr_v2[input$N_F_v2, ] == 1)), collapse = ", ")
     ))
   })
@@ -286,7 +286,7 @@ server <- function(input, output) {
   
   output$mytable2_v3 <- renderDataTable({
     table <- cbind(
-      `pmsignature` = paste0("P", index2_v3()),
+      `pmsignature` = paste0(index2_v3()),
       `COSMIC v3.1 Signature` = colnames(corr_mat_2_v3()),
       `Similarity` = round(corr_mat_2_v3()[index2_v3(), ], 3)
     )
@@ -313,7 +313,7 @@ server <- function(input, output) {
   
   output$selected2_v3_1 <- renderValueBox({
     valueBox(
-      paste0("P", index2_v3()), "pmsignature",
+      paste0(index2_v3()), "pmsignature",
       icon = icon("list"),
       color = "blue"
     )
@@ -328,7 +328,7 @@ server <- function(input, output) {
   
   output$selected2_v3_2 <- renderValueBox({
     valueBox(
-      paste0("C", indexS2_v3()), "COSMIC input",
+      paste0(indexS2_v3()), "COSMIC input",
       icon = icon("user"),
       color = "yellow"
     )
@@ -336,7 +336,7 @@ server <- function(input, output) {
   
   output$selected_sig_text_v3_2 <- renderText({
     HTML(paste0(
-      "<b>Type:</b> pmsignature P", index2_v3(), "</br>",
+      "<b>Type:</b> pmsignature ", index2_v3(), "</br>",
       "<b>", "Cancer Membership:</b> ", paste(names(which(pm_corr[index2_v3(), ] == 1)), collapse = ", ")
     ))
   })

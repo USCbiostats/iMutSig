@@ -85,8 +85,8 @@ getCosDistance <- function(F_1, F_2) {
     geterrmessage("Two signatures have different number of bases!")
   }
   
-  return(sum(F_1/sqrt(sum(F_1^2))*F_2/sqrt(sum(F_2^2))))
-  
+  cos <- sum(F_1*F_2)/(sqrt(sum(F_1^2))*sqrt(sum(F_2^2)))
+  return(cos)
 }
 
 
