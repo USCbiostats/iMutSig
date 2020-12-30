@@ -1,13 +1,13 @@
 # *iMutSig*: a web application to identify the most similar mutational signature using shiny
 
 ![](https://img.shields.io/badge/release%20version-1.0-green.svg)
-[![](https://img.shields.io/badge/doi-10.12688/f1000research.24435-yellow.svg)](https://doi.org/10.12688/f1000research.24435.1)
+[![](https://img.shields.io/badge/doi-10.12688/f1000research.24435.2-yellow.svg)](https://doi.org/10.12688/f1000research.24435.2)
 
 
-![](https://f1000researchdata.s3.amazonaws.com/manuscripts/26954/c9347314-4bd6-4497-a9ff-219373b2409c_figure1.gif)
+![](https://f1000researchdata.s3.amazonaws.com/manuscripts/30641/76f8ffbc-ffb7-4956-a271-534cd8db6ee9_figure2.gif)
 
 ## Paper
-You can download the paper at [*F1000Research*](https://doi.org/10.12688/f1000research.24435.1) and cite the paper:
+You can download the paper at [*F1000Research*](https://doi.org/10.12688/f1000research.24435.2) and cite the paper:
 
 - Yang Z, Pandey P, Marjoram P and Siegmund KD. iMutSig: a web application to identify the most similar mutational signature using shiny [version 1; peer review: 2 approved with reservations]. *F1000Research* 2020, 9:586 (https://doi.org/10.12688/f1000research.24435.1)
 
