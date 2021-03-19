@@ -1,7 +1,8 @@
 # *iMutSig*: a web application to identify the most similar mutational signature using shiny
 
 ![](https://img.shields.io/badge/release%20version-1.0-green.svg)
-[![](https://img.shields.io/badge/doi-10.12688/f1000research.24435.2-yellow.svg)](https://doi.org/10.12688/f1000research.24435.2)
+[![](https://img.shields.io/badge/doi-10.12688/f1000research.24435.2-yellow.svg)](https://doi.org/10.12688/f1000research.24435.2) [![](https://raw.githubusercontent.com/USCbiostats/badges/master/tommy-image-badge.svg)](https://image.usc.edu)
+
 
 
 ![](https://f1000researchdata.s3.amazonaws.com/manuscripts/30641/76f8ffbc-ffb7-4956-a271-534cd8db6ee9_figure2.gif)
